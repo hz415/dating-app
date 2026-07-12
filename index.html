@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dating With Me</title>
+    <style id="theme-vars">
+/* ============================================
+   VibeCoding Dating App — Brand CSS
+   Replicated from video: clean white bg, pink accents
+   ============================================ */
+
+:root {
+  /* ── Brand Primary: Warm Pink ── */
+  --color-primary: #FF6B8A;
+  --color-primary-light: #FFB3C6;
+  --color-primary-lighter: #FFE0E8;
+  --color-primary-lightest: #FFF5F7;
+  --color-primary-dark: #E8556F;
+  --color-primary-darker: #CC3D5A;
+
+  /* ── Neutrals ── */
+  --color-bg: #F5F5F5;
+  --color-bg-soft: #FFFFFF;
+  --color-bg-muted: #F0F0F0;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-border: #E8E8E8;
+  --color-border-light: #F0F0F0;
+
+  /* ── Text ── */
+  --color-text-primary: #333333;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #999999;
+  --color-text-inverse: #FFFFFF;
+
+  /* ── State Colors ── */
+  --state-success: #07C160;
+  --state-warning: #FAAD14;
+  --state-error: #FA5151;
+  --state-info: #5B9FE8;
+
+  /* ── Typography ── */
+  --font-family-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-family-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+
+  --text-xs: 0.625rem;
+  --text-sm: 0.75rem;
+  --text-base: 0.875rem;
+  --text-lg: 1rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.25rem;
+  --text-3xl: 1.5rem;
+  --text-4xl: 2rem;
+  --text-5xl: 2.5rem;
+
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* ── Spacing ── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* ── Radius ── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+html.dark {
+  --color-primary: #FF6B8A;
+  --color-primary-light: #FF8FA6;
+  --color-primary-lighter: #3D2030;
+  --color-primary-lightest: #2A1520;
+  --color-primary-dark: #FF8FA6;
+  --color-primary-darker: #FFB3C6;
+
+  --color-bg: #1A1A1A;
+  --color-bg-soft: #242424;
+  --color-bg-muted: #2A2A2A;
+  --color-surface: #2A2A2A;
+  --color-surface-elevated: #333333;
+  --color-border: #3A3A3A;
+  --color-border-light: #333333;
+
+  --color-text-primary: #E8E8E8;
+  --color-text-secondary: #AAAAAA;
+  --color-text-tertiary: #777777;
+  --color-text-inverse: #1A1A1A;
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-primary: var(--color-primary);
+    --color-border: var(--color-border);
+  }
+  @layer base {
+    body { background: var(--color-surface); color: var(--color-text-primary); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         MERGED PAGE STYLES
+         ══════════════════════════════════════════════════════════════ -->
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+    /* ── Base Reset ── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFF5F7 50%, #E8F8F0 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Page Visibility Management ── */
+    .app-page {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100%;
+    }
+    .app-page.active {
+      display: flex;
+    }
+
+    /* ════════════════════════════════════════════
+       Floating flower emojis scattered on background
+       ════════════════════════════════════════════ */
+    @keyframes flowerFall {
+      0% {
+        transform: translateY(-10vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.7;
+      }
+      90% {
+        opacity: 0.5;
+      }
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes flowerSway {
+      0%, 100% { margin-left: 0; }
+      25% { margin-left: 15px; }
+      75% { margin-left: -15px; }
+    }
+
+    .bg-flower {
+      position: fixed;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+      top: 0;
+      animation: flowerFall var(--fall-duration, 12s) linear var(--fall-delay, 0s) infinite,
+                 flowerSway var(--sway-duration, 4s) ease-in-out var(--sway-delay, 0s) infinite;
+    }
+    .bg-flower-1 { left: 8%; font-size: 1.5rem; --fall-duration: 11s; --fall-delay: 0s; --sway-duration: 3.5s; --sway-delay: 0s; }
+    .bg-flower-2 { left: 85%; font-size: 1.1rem; --fall-duration: 14s; --fall-delay: 2s; --sway-duration: 4s; --sway-delay: 1s; }
+    .bg-flower-3 { left: 18%; font-size: 0.9rem; --fall-duration: 10s; --fall-delay: 4s; --sway-duration: 3s; --sway-delay: 0.5s; }
+    .bg-flower-4 { left: 90%; font-size: 1.3rem; --fall-duration: 13s; --fall-delay: 1s; --sway-duration: 5s; --sway-delay: 2s; }
+    .bg-flower-5 { left: 5%; font-size: 1.4rem; --fall-duration: 12s; --fall-delay: 3s; --sway-duration: 3.8s; --sway-delay: 1.5s; }
+    .bg-flower-6 { left: 88%; font-size: 1rem; --fall-duration: 15s; --fall-delay: 5s; --sway-duration: 4.2s; --sway-delay: 0.8s; }
+    .bg-flower-7 { left: 25%; font-size: 1.2rem; --fall-duration: 11s; --fall-delay: 6s; --sway-duration: 3.2s; --sway-delay: 2.5s; }
+    .bg-flower-8 { left: 95%; font-size: 0.85rem; --fall-duration: 16s; --fall-delay: 7s; --sway-duration: 4.5s; --sway-delay: 1.2s; }
+    .bg-flower-9 { left: 3%; font-size: 1.05rem; --fall-duration: 13s; --fall-delay: 8s; --sway-duration: 3.6s; --sway-delay: 0.3s; }
+    .bg-flower-10 { left: 6%; font-size: 0.75rem; --fall-duration: 17s; --fall-delay: 9s; --sway-duration: 5s; --sway-delay: 2s; }
+
+    /* ════════════════════════════════════════════
+       INVITE PAGE STYLES
+       ════════════════════════════════════════════ */
+    .photo-shadow-pink {
+      box-shadow: 5px 5px 0 0 #000000;
+    }
+
+    .flower-float {
+      position: absolute;
+      font-size: 1.25rem;
+      user-select: none;
+      pointer-events: none;
+    }
+    .flower-tl { top: -12px; left: -8px; }
+    .flower-tr { top: -10px; right: -10px; }
+    .flower-bl { bottom: -10px; left: 10px; }
+    .flower-br { bottom: -12px; right: 5px; }
+
+    .btn-yes {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn-yes:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 8px 0 0 #000000;
+    }
+
+    .btn-no {
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+    .btn-no:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 8px 0 0 #000000;
+    }
+
+    /* ════════════════════════════════════════════
+       SURPRISED PAGE STYLES
+       ════════════════════════════════════════════ */
+    .btn-okay {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+    }
+    .btn-okay:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 0 0 #000000;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      60% { transform: scale(1.12); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .icon-pop {
+      animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up {
+      animation: fadeSlideUp 0.45s ease-out forwards;
+    }
+    .fade-up-d1 { animation-delay: 0.12s; opacity: 0; }
+    .fade-up-d2 { animation-delay: 0.24s; opacity: 0; }
+    .fade-up-d3 { animation-delay: 0.36s; opacity: 0; }
+
+    /* ════════════════════════════════════════════
+       FOOD SELECT PAGE STYLES
+       ════════════════════════════════════════════ */
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      width: 100%;
+      max-width: 340px;
+      background: #FFFFFF;
+      padding: 20px;
+      border-radius: 20px;
+      border: 3.5px solid #1A1A1A;
+      box-shadow: 4px 4px 0 0 #000000;
+    }
+
+    .food-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      aspect-ratio: 1;
+      background-color: #F9F5F6;
+      border: 2px solid #1A1A1A;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 3px 3px 0 0 #000000;
+    }
+
+    .food-card:hover {
+      border-color: #FF6B8A;
+      background-color: #FFE0E8;
+      box-shadow: 3px 3px 0 0 #000000;
+      transform: translateY(-2px);
+    }
+
+    .food-card:active {
+      transform: scale(0.96);
+    }
+
+    .food-card .emoji {
+      font-size: 42px;
+      line-height: 1;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.06));
+    }
+
+    .food-card .label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333333;
+      letter-spacing: 0.01em;
+    }
+
+    .food-card.last-item {
+      grid-column: 2 / 3;
+    }
+
+    /* ════════════════════════════════════════════
+       DATE PICK PAGE STYLES
+       ════════════════════════════════════════════ */
+    .date-card {
+      width: 100%;
+      max-width: 360px;
+      background: #FFFFFF;
+      border: 3.5px solid #1A1A1A;
+      border-radius: 24px;
+      padding: 32px 28px 28px;
+      box-shadow: 4px 4px 0 0 #000000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: visible;
+    }
+
+    .date-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      width: 80px;
+      height: 80px;
+      background: #FFE0E8;
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .calendar-icon {
+      width: 56px;
+      height: 56px;
+      background: #FF6B8A;
+      border: 2px solid #1A1A1A;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 4px 4px 0 0 #000000;
+    }
+
+    .date-card h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #333333;
+      text-align: center;
+      margin-bottom: 28px;
+      line-height: 1.4;
+      position: relative;
+      z-index: 1;
+    }
+
+    .input-group {
+      width: 100%;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #333333;
+      margin-bottom: 8px;
+    }
+
+    .input-group input {
+      width: 100%;
+      height: 50px;
+      border: 2px solid #1A1A1A;
+      border-radius: 14px;
+      padding: 0 16px;
+      font-size: 15px;
+      color: #333333;
+      background: #FFFFFF;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      box-shadow: 3px 3px 0 0 #000000;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .input-group input::placeholder {
+      color: #C0C0C0;
+    }
+
+    .input-group input:focus {
+      border-color: #FF6B8A;
+    }
+
+    .time-input-wrapper {
+      position: relative;
+    }
+
+    .time-input-wrapper::after {
+      content: '\25BC';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      color: #999999;
+      pointer-events: none;
+    }
+
+    .cta-button {
+      width: 100%;
+      height: 52px;
+      border: none;
+      border-radius: 14px;
+      background: #FF6B8A;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 4px 4px 0 0 #000000;
+      font-family: inherit;
+      letter-spacing: 0.02em;
+      -webkit-tap-highlight-color: transparent;
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-button:hover {
+      box-shadow: 6px 6px 0 0 #000000;
+      transform: translateY(-2px);
+    }
+
+    .cta-button:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 8px rgba(255, 107, 138, 0.25);
+    }
+
+    /* Calendar Date Picker */
+    .calendar-picker {
+      background: #FFFFFF;
+      border: 2px solid #1A1A1A;
+      border-radius: 14px;
+      box-shadow: 4px 4px 0 0 #000000;
+      padding: 14px;
+      margin-top: 8px;
+      width: 100%;
+      position: relative;
+      z-index: 20;
+      overflow: hidden;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+      margin-bottom: 12px;
+    }
+
+    .cal-nav {
+      font-size: 14px;
+      color: #666666;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      user-select: none;
+      transition: background 0.15s;
+    }
+
+    .cal-nav:hover {
+      background: #F0F0F0;
+    }
+
+    .cal-month {
+      font-size: 15px;
+      font-weight: 700;
+      color: #333333;
+      text-align: center;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0;
+      justify-items: center;
+      align-items: center;
+    }
+
+    .cal-day-header {
+      min-width: 36px;
+      height: 30px;
+      max-width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #999999;
+    }
+
+    .cal-day {
+      min-width: 36px;
+      height: 36px;
+      max-width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #333333;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.15s;
+      user-select: none;
+    }
+
+    .cal-day:hover {
+      background: #E8F0FE;
+    }
+
+    .cal-day.empty {
+      cursor: default;
+    }
+
+    .cal-day.empty:hover {
+      background: transparent;
+    }
+
+    .cal-day.other-month {
+      color: #CCCCCC;
+      cursor: default;
+    }
+
+    .cal-day.other-month:hover {
+      background: transparent;
+    }
+
+    .cal-day.selected {
+      background: #FF6B8A;
+      color: #FFFFFF;
+      font-weight: 700;
+    }
+
+    .cal-day.selected:hover {
+      background: #FF6B8A;
+    }
+
+    .cal-day.today {
+      border: 2px solid #FF6B8A;
+      color: #FF6B8A;
+      font-weight: 700;
+      border-radius: 50%;
+      background: transparent;
+    }
+
+    .cal-day.today:hover {
+      background: transparent;
+    }
+
+    .calendar-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding: 4px 4px 0;
+    }
+
+    .cal-footer-btn {
+      font-size: 13px;
+      color: #999999;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.15s;
+      user-select: none;
+    }
+
+    .cal-footer-btn:hover {
+      background: #F0F0F0;
+      color: #666666;
+    }
+
+    /* Time Picker Dropdown */
+    .time-picker-dropdown {
+      background: #FFFFFF;
+      border: 2px solid #1A1A1A;
+      border-radius: 14px;
+      box-shadow: 4px 4px 0 0 #000000;
+      padding: 0;
+      margin-top: 8px;
+      width: 100%;
+      max-height: 280px;
+      overflow-y: auto;
+      position: relative;
+      z-index: 20;
+    }
+
+    .time-picker-header {
+      font-size: 13px;
+      color: #999999;
+      padding: 10px 16px 6px;
+    }
+
+    .time-slots {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .time-slot {
+      width: 100%;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 15px;
+      color: #333333;
+      background: #FFFFFF;
+      border-bottom: 1px solid #F0F0F0;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+      user-select: none;
+    }
+
+    .time-slot:hover {
+      background: #F5F5F5;
+    }
+
+    .time-slot.selected {
+      background: #FFE0E8;
+      color: #FF6B8A;
+      font-weight: 600;
+    }
+
+    .time-slot.selected:hover {
+      background: #FFE0E8;
+    }
+
+    .time-slot.selected::after {
+      content: '';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 20px;
+      background: #FF6B8A;
+      border-radius: 4px;
+    }
+
+    /* ════════════════════════════════════════════
+       CONFIRM PAGE STYLES
+       ════════════════════════════════════════════ */
+    .confirm-card {
+      background: #FFFFFF;
+      border: 3.5px solid #1A1A1A;
+      border-radius: 24px;
+      padding: 40px 28px 32px;
+      max-width: 360px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 4px 4px 0 0 #000000;
+    }
+
+    .profile-photo {
+      width: 180px;
+      height: 180px;
+      border-radius: 16px;
+      object-fit: cover;
+      box-shadow: 5px 5px 0 0 #000000;
+    }
+
+    .headline {
+      font-size: 22px;
+      font-weight: 700;
+      color: #333333;
+      text-align: center;
+      line-height: 1.45;
+      margin-top: 28px;
+      padding: 0 8px;
+    }
+
+    .summary {
+      font-size: 14px;
+      color: #999999;
+      text-align: center;
+      line-height: 1.6;
+      margin-top: 16px;
+      padding: 0 8px;
+    }
+
+    .info-cards {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      margin-top: 28px;
+    }
+
+    .info-card {
+      flex: 1;
+      background: #F9F9F9;
+      border: 2px solid #1A1A1A;
+      border-radius: 14px;
+      padding: 18px 8px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 3px 3px 0 0 #000000;
+    }
+
+    .info-card .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #FF6B8A;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .info-card .card-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #333333;
+    }
+
+    .hearts-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 32px;
+    }
+
+    .hearts-row span {
+      color: #FF6B8A;
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .hearts-row span:nth-child(1) { font-size: 15px; }
+    .hearts-row span:nth-child(2) { font-size: 13px; }
+    .hearts-row span:nth-child(3) { font-size: 15px; }
+    .hearts-row span:nth-child(4) { font-size: 12px; }
+    .hearts-row span:nth-child(5) { font-size: 14px; }
+    .hearts-row span:nth-child(6) { font-size: 11px; }
+    .hearts-row span:nth-child(7) { font-size: 13px; }
+    </style>
+</head>
+<body>
+
+  <!-- Floating background flowers (shared across all pages) -->
+  <span class="bg-flower bg-flower-1">&#127800;</span>
+  <span class="bg-flower bg-flower-2">&#127800;</span>
+  <span class="bg-flower bg-flower-3">&#127800;</span>
+  <span class="bg-flower bg-flower-4">&#127800;</span>
+  <span class="bg-flower bg-flower-5">&#127800;</span>
+  <span class="bg-flower bg-flower-6">&#127800;</span>
+  <span class="bg-flower bg-flower-7">&#127800;</span>
+  <span class="bg-flower bg-flower-8">&#127800;</span>
+  <span class="bg-flower bg-flower-9">&#127800;</span>
+  <span class="bg-flower bg-flower-10">&#127800;</span>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PAGE: INVITE
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="app-page active" id="page-invite" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 1.5rem;">
+
+    <!-- Mobile container -->
+    <div style="max-width: 430px; width: 100%; position: relative; z-index: 1;">
+
+      <!-- Card -->
+      <div class="invite-card" style="
+        position: relative;
+        background: #FFFFFF;
+        border: 3.5px solid #1A1A1A;
+        border-radius: 22px;
+        padding: 2.25rem 1.75rem 2rem 1.75rem;
+        text-align: center;
+      ">
+
+        <!-- Decorative flowers around card edges -->
+        <span class="flower-float flower-tl">&#127800;</span>
+        <span class="flower-float flower-tr">&#127800;</span>
+        <span class="flower-float flower-bl">&#127800;</span>
+        <span class="flower-float flower-br">&#127800;</span>
+
+        <!-- Flower above photo -->
+        <div style="margin-bottom: 0.5rem;">
+          <span style="font-size: 1.75rem;">&#127800;</span>
+        </div>
+
+        <!-- Profile Photo -->
+        <div style="
+          display: inline-block;
+          width: 200px;
+          height: 200px;
+          border-radius: 16px;
+          overflow: hidden;
+          margin-bottom: 1.75rem;
+          position: relative;
+        ">
+          <img
+            src="assets/cat-photo.jpg"
+            alt="Profile"
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 16px;
+            "
+            class="photo-shadow-pink"
+          >
+        </div>
+
+        <!-- Main Text with flanking flowers -->
+        <div style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+        ">
+          <span style="font-size: 1.125rem; line-height: 1;">&#127800;</span>
+          <div>
+            <span style="
+              font-size: 1.5rem;
+              font-weight: 700;
+              color: #1A1A1A;
+              line-height: 1.5;
+            ">可以和我一起</span><span style="
+              font-size: 1.5rem;
+              font-weight: 700;
+              color: var(--color-primary, #FF6B8A);
+              line-height: 1.5;
+            ">约会</span><span style="
+              font-size: 1.5rem;
+              font-weight: 700;
+              color: #1A1A1A;
+              line-height: 1.5;
+            ">嘛?!</span>
+          </div>
+          <span style="font-size: 1.125rem; line-height: 1;">&#127800;</span>
+        </div>
+
+        <!-- Subtext -->
+        <p style="
+          font-size: 0.8125rem;
+          color: #999999;
+          margin-bottom: 2rem;
+          line-height: 1.6;
+          font-weight: 400;
+        ">系统检测到: 对方已经紧张到开始写网页了。</p>
+
+        <!-- Buttons -->
+        <div style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.75rem;
+        ">
+          <!-- Yes button (primary) -->
+          <button
+            data-dom-id="btn-yes"
+            class="btn-yes"
+            onclick="navigateTo('surprised')"
+            style="
+              background: var(--color-primary, #FF6B8A);
+              color: #FFFFFF;
+              font-size: 1rem;
+              font-weight: 600;
+              border: none;
+              border-radius: 9999px;
+              padding: 0.75rem 1.75rem;
+              cursor: pointer;
+              flex: 1.2;
+              font-family: inherit;
+              letter-spacing: 0.02em;
+              box-shadow: 4px 4px 0 0 #000000;
+            "
+          >愿意 &#10084;</button>
+
+          <!-- No button (secondary) -->
+          <button
+            data-dom-id="btn-no"
+            class="btn-no"
+            onclick="handleNoClick(this)"
+            style="
+              background: #FFFFFF;
+              color: #1A1A1A;
+              font-size: 0.875rem;
+              font-weight: 500;
+              border: 2px solid #1A1A1A;
+              border-radius: 9999px;
+              padding: 0.6rem 1.25rem;
+              cursor: pointer;
+              flex: 0.85;
+              font-family: inherit;
+              letter-spacing: 0.02em;
+              box-shadow: 4px 4px 0 0 #000000;
+            "
+          >不要 &#129406;</button>
+        </div>
+
+      </div>
+      <!-- /Card -->
+
+    </div>
+    <!-- /Mobile container -->
+
+  </div>
+  <!-- /page-invite -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PAGE: SURPRISED
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="app-page" id="page-surprised" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 1.5rem;">
+
+    <!-- Mobile container -->
+    <div style="max-width: 430px; width: 100%; position: relative; z-index: 1;">
+
+      <!-- Card -->
+      <div style="
+        background: #FFFFFF;
+        border: 3.5px solid #1A1A1A;
+        border-radius: 24px;
+        padding: 2.5rem 2rem 2.25rem 2rem;
+        text-align: center;
+        box-shadow: 4px 4px 0 0 #000000;
+      ">
+
+        <!-- Top Icon: Red rounded square with peanut emoji -->
+        <div class="icon-pop" style="
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 68px;
+          height: 68px;
+          background: #FF6B8A;
+          border-radius: 16px;
+          margin-bottom: 1.75rem;
+          box-shadow: 4px 4px 0 0 #000000;
+        ">
+          <span style="font-size: 2.25rem; line-height: 1;">&#129372;</span>
+        </div>
+
+        <!-- Main Text -->
+        <div class="fade-up fade-up-d1" style="margin-bottom: 0.75rem;">
+          <h1 style="
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1A1A1A;
+            line-height: 1.5;
+            margin: 0;
+          ">等下，你真的点了愿意？？ &#128557;</h1>
+        </div>
+
+        <!-- Subtext -->
+        <p class="fade-up fade-up-d2" style="
+          font-size: 0.875rem;
+          color: #999999;
+          line-height: 1.6;
+          margin: 0 0 2rem 0;
+          font-weight: 400;
+        ">我都已经准备好被你点"不要"了。</p>
+
+        <!-- CTA Button -->
+        <div class="fade-up fade-up-d3">
+          <button
+            data-dom-id="btn-okay"
+            class="btn-okay"
+            onclick="navigateTo('food-select')"
+            style="
+              display: inline-block;
+              width: 100%;
+              max-width: 280px;
+              background: #FF6B8A;
+              color: #FFFFFF;
+              font-size: 1rem;
+              font-weight: 600;
+              border: none;
+              border-radius: 9999px;
+              padding: 0.875rem 2rem;
+              font-family: inherit;
+              letter-spacing: 0.02em;
+              box-shadow: 4px 4px 0 0 #000000;
+              cursor: pointer;
+            "
+          >好啦好啦 &rarr;</button>
+        </div>
+
+      </div>
+      <!-- /Card -->
+
+    </div>
+    <!-- /Mobile container -->
+
+  </div>
+  <!-- /page-surprised -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PAGE: FOOD SELECT
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="app-page" id="page-food-select" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%;">
+
+    <!-- Main Content -->
+    <main class="w-full max-w-mobile mx-auto flex flex-col items-center px-6" style="min-height: auto; padding-top: 0; padding-bottom: 0; position: relative; z-index: 1;">
+
+      <!-- Question / Heading Area -->
+      <div class="text-center" style="margin-bottom: 24px;">
+        <h1 class="text-3xl font-bold" style="color: #333333; line-height: 1.4; margin-bottom: 10px;">
+          我们吃点什么？&#127869;&#10024;
+        </h1>
+        <p class="text-base" style="color: #999999; font-weight: 400; line-height: 1.6;">
+          挑一个今天的约会氛围。
+        </p>
+      </div>
+
+      <!-- Food Selection Grid -->
+      <div class="food-grid">
+
+        <!-- Row 1 -->
+        <a href="javascript:void(0)" class="food-card" onclick="selectFood('披萨', this)">
+          <span class="emoji">&#127829;</span>
+          <span class="label">披萨</span>
+        </a>
+        <a href="javascript:void(0)" class="food-card" onclick="selectFood('寿司', this)">
+          <span class="emoji">&#127843;</span>
+          <span class="label">寿司</span>
+        </a>
+        <a href="javascript:void(0)" class="food-card" onclick="selectFood('火锅', this)">
+          <span class="emoji">&#127858;</span>
+          <span class="label">火锅</span>
+        </a>
+
+        <!-- Row 2 -->
+        <a href="javascript:void(0)" class="food-card" onclick="selectFood('烤肉', this)">
+          <span class="emoji">&#129385;</span>
+          <span class="label">烤肉</span>
+        </a>
+        <a href="javascript:void(0)" class="food-card" onclick="selectFood('早茶', this)">
+          <span class="emoji">&#129387;</span>
+          <span class="label">早茶</span>
+        </a>
+        <a href="javascript:void(0)" class="food-card" onclick="selectFood('拉面', this)">
+          <span class="emoji">&#127836;</span>
+          <span class="label">拉面</span>
+        </a>
+
+        <!-- Row 3 -->
+        <a href="javascript:void(0)" class="food-card" onclick="selectFood('麻辣烫', this)">
+          <span class="emoji">&#127798;&#65039;</span>
+          <span class="label">麻辣烫</span>
+        </a>
+        <a href="javascript:void(0)" class="food-card" onclick="selectFood('小龙虾', this)">
+          <span class="emoji">&#129424;</span>
+          <span class="label">小龙虾</span>
+        </a>
+        <a href="javascript:void(0)" class="food-card" onclick="selectFood('烧烤', this)">
+          <span class="emoji">&#127828;</span>
+          <span class="label">烧烤</span>
+        </a>
+
+        <!-- Row 4 (centered) -->
+        <a href="javascript:void(0)" class="food-card last-item" data-dom-id="btn-other" onclick="selectFood('其他', this)">
+          <span class="emoji">&#127790;</span>
+          <span class="label">其他</span>
+        </a>
+
+      </div>
+
+      <!-- Spacer -->
+      <div class="flex-1"></div>
+
+    </main>
+
+  </div>
+  <!-- /page-food-select -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PAGE: DATE PICK
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="app-page" id="page-date-pick" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 20px;">
+
+    <!-- Card -->
+    <div class="date-card" style="position: relative; z-index: 1;">
+
+      <!-- Calendar Icon -->
+      <div class="calendar-icon">6</div>
+
+      <!-- Main Heading -->
+      <h1>所以...你什么时候有空？&#128521;</h1>
+
+      <!-- Date Input -->
+      <div class="input-group">
+        <label>选一天 &#128197;</label>
+        <div class="time-input-wrapper">
+          <input type="text" id="date-input" placeholder="年/月/日" onclick="toggleCalendarPicker()" />
+        </div>
+
+        <!-- Calendar Date Picker (hidden by default) -->
+        <div class="calendar-picker" id="calendar-picker" style="display: none;">
+          <div class="calendar-header">
+            <span class="cal-nav" id="cal-prev" onclick="prevMonth()">&#9664;</span>
+            <span class="cal-month" id="cal-month-label">2026年 7月</span>
+            <span class="cal-nav" id="cal-next" onclick="nextMonth()">&#9654;</span>
+          </div>
+          <div class="calendar-grid" id="cal-grid">
+            <!-- Day headers only (JS renders day cells dynamically) -->
+            <div class="cal-day-header">日</div>
+            <div class="cal-day-header">一</div>
+            <div class="cal-day-header">二</div>
+            <div class="cal-day-header">三</div>
+            <div class="cal-day-header">四</div>
+            <div class="cal-day-header">五</div>
+            <div class="cal-day-header">六</div>
+          </div>
+          <div class="calendar-footer">
+            <span class="cal-footer-btn cal-today-btn" id="cal-today" onclick="goToday()">今天</span>
+            <span class="cal-footer-btn cal-clear-btn" id="cal-clear" onclick="clearDate()">清除</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Time Input -->
+      <div class="input-group">
+        <label>几点见？&#9200;</label>
+        <div class="time-input-wrapper">
+          <input type="text" id="time-input" placeholder="选择时间..." onclick="toggleTimePicker()" />
+        </div>
+
+        <!-- Time Picker Dropdown (hidden by default) -->
+        <div class="time-picker-dropdown" id="time-dropdown" style="display: none;">
+          <div class="time-picker-header">选择时间...</div>
+          <div class="time-slots">
+            <div class="time-slot" onclick="selectTime('12:00', this)">12:00</div>
+            <div class="time-slot" onclick="selectTime('12:30', this)">12:30</div>
+            <div class="time-slot" onclick="selectTime('13:00', this)">13:00</div>
+            <div class="time-slot" onclick="selectTime('13:30', this)">13:30</div>
+            <div class="time-slot" onclick="selectTime('14:00', this)">14:00</div>
+            <div class="time-slot" onclick="selectTime('15:00', this)">15:00</div>
+            <div class="time-slot" onclick="selectTime('16:00', this)">16:00</div>
+            <div class="time-slot" onclick="selectTime('17:00', this)">17:00</div>
+            <div class="time-slot" onclick="selectTime('18:00', this)">18:00</div>
+            <div class="time-slot" onclick="selectTime('19:00', this)">19:00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Button -->
+      <button class="cta-button" data-dom-id="btn-confirm" onclick="navigateTo('confirm')">确定时间 &#10084;</button>
+
+    </div>
+
+  </div>
+  <!-- /page-date-pick -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PAGE: CONFIRM
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="app-page" id="page-confirm" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 24px 16px;">
+
+    <div class="confirm-card" style="position: relative; z-index: 1;">
+
+      <!-- Profile Photo -->
+      <img class="profile-photo" src="assets/cat-photo.jpg" alt="Profile Photo">
+
+      <!-- Main Headline -->
+      <p class="headline">真开心你没有拒绝～<br>我会准时来接你！</p>
+
+      <!-- Summary Text -->
+      <p class="summary" id="confirm-summary">7月12日 17:00, 我们去吃火锅。你带好胃口，我带好路线。</p>
+
+      <!-- Info Cards -->
+      <div class="info-cards">
+        <div class="info-card">
+          <span class="card-label">DATE</span>
+          <span class="card-value" id="confirm-date">7月12日</span>
+        </div>
+        <div class="info-card">
+          <span class="card-label">TIME</span>
+          <span class="card-value" id="confirm-time">17:00</span>
+        </div>
+        <div class="info-card">
+          <span class="card-label">MENU</span>
+          <span class="card-value" id="confirm-food">火锅</span>
+        </div>
+      </div>
+
+      <!-- Bottom Hearts -->
+      <div class="hearts-row">
+        <span>&#10084;</span>
+        <span>&#10084;</span>
+        <span>&#10084;</span>
+        <span>&#10084;</span>
+        <span>&#10084;</span>
+        <span>&#10084;</span>
+        <span>&#10084;</span>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- /page-confirm -->
+
+  <!-- Shared App Logic -->
+  <script src="app.js?v=2"></script>
+
+  <!-- Calendar picker toggle (supplements app.js) -->
+  <script>
+    function toggleCalendarPicker() {
+      const picker = document.getElementById('calendar-picker');
+      if (!picker) return;
+      if (picker.style.display === 'none' || !picker.style.display) {
+        picker.style.display = 'block';
+        renderCalendar();
+      } else {
+        picker.style.display = 'none';
+      }
+    }
+  </script>
+
+</body>
+</html>
