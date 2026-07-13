@@ -148,7 +148,11 @@ function updateCalendarIcon(day) {
   }
 }
 
+let _calNavLock = false;
 function prevMonth() {
+  if (_calNavLock) return;
+  _calNavLock = true;
+  setTimeout(() => { _calNavLock = false; }, 300);
   if (AppState.calMonth === 1) {
     AppState.calMonth = 12;
     AppState.calYear--;
@@ -159,6 +163,9 @@ function prevMonth() {
 }
 
 function nextMonth() {
+  if (_calNavLock) return;
+  _calNavLock = true;
+  setTimeout(() => { _calNavLock = false; }, 300);
   if (AppState.calMonth === 12) {
     AppState.calMonth = 1;
     AppState.calYear++;
@@ -342,3 +349,50 @@ function initApp() {
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
+
+// ── 复制结果 ──
+function copyResult() {
+  const dateDisplay = AppState.selectedDate ? formatDisplayDate(AppState.selectedDate) : '';
+  const text = `约会回复：${dateDisplay} ${AppState.selectedTime || ''}，一起去吃${AppState.selectedFood || ''}！`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('已复制到剪贴板，快发给TA吧~');
+    });
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('已复制到剪贴板，快发给TA吧~');
+  }
+}
+
+function showToast(msg) {
+  const toast = document.createElement('div');
+  toast.textContent = msg;
+  toast.style.cssText = 'position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:#FF6B8A;color:#fff;padding:10px 20px;border-radius:20px;font-size:0.9rem;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,0.15);animation:fadeInUp 0.3s;';
+  document.body.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; }, 2000);
+  setTimeout(() => { toast.remove(); }, 2500);
+}
+
+function restartApp() {
+  AppState.selectedFood = '';
+  AppState.selectedDate = '';
+  AppState.selectedTime = '';
+  AppState.currentPage = 'invite';
+  localStorage.removeItem('dating_selectedDate');
+  localStorage.removeItem('dating_selectedTime');
+  localStorage.removeItem('dating_selectedFood');
+  navigateTo('invite');
+}
+
+// ── 初始化 ──
+(function() {
+  // 页面加载时渲染日历
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderCalendar);
+  }
+})();

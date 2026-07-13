@@ -827,6 +827,7 @@ html.dark {
   <span class="bg-flower bg-flower-9">&#127800;</span>
   <span class="bg-flower bg-flower-10">&#127800;</span>
 
+
   <!-- ══════════════════════════════════════════════════════════════
        PAGE: INVITE
        ══════════════════════════════════════════════════════════════ -->
@@ -917,6 +918,8 @@ html.dark {
           line-height: 1.6;
           font-weight: 400;
         ">系统检测到: 对方已经紧张到开始写网页了。</p>
+
+
 
         <!-- Buttons -->
         <div style="
@@ -1258,13 +1261,20 @@ html.dark {
         <span>&#10084;</span>
       </div>
 
+      <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <button class="cta-button" onclick="copyResult()"
+          style="background: #FF6B8A; color: #fff; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">复制结果发给TA 📋</button>
+        <button class="cta-button" onclick="restartApp()"
+          style="background: #FFD1DC; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">再来一次 🔄</button>
+      </div>
+
     </div>
 
   </div>
   <!-- /page-confirm -->
 
   <!-- Shared App Logic -->
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 
   <!-- Calendar picker toggle (supplements app.js) -->
   <script>
