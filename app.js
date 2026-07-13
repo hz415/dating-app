@@ -189,11 +189,27 @@ function clearDate() {
 }
 
 // ── 时间选择 ──
+function generateTimeSlots() {
+  const container = document.querySelector('.time-slots');
+  if (!container || container.children.length > 0) return;
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m += 30) {
+      const timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+      const slot = document.createElement('div');
+      slot.className = 'time-slot';
+      slot.textContent = timeStr;
+      slot.addEventListener('click', () => selectTime(timeStr, slot));
+      container.appendChild(slot);
+    }
+  }
+}
+
 function toggleTimePicker() {
   const dropdown = document.getElementById('time-dropdown');
   if (!dropdown) return;
 
   if (dropdown.style.display === 'none' || !dropdown.style.display) {
+    generateTimeSlots();
     dropdown.style.display = 'block';
   } else {
     dropdown.style.display = 'none';
