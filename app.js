@@ -366,7 +366,7 @@ function submitNickname() {
 }
 
 // ── 数据库 API ──
-const API_BASE = '/api';
+const API_BASE = 'https://dating-52f0glmfp-hz5.vercel.app/api';
 
 async function saveToDatabase() {
   if (!AppState.nickname) return;
