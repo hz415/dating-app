@@ -14,8 +14,8 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { room, nickname, food, date, time } = req.body;
-  if (!room || !nickname || !food || !date || !time) {
+  const { room, food, date, time } = req.body;
+  if (!room || !food || !date || !time) {
     return res.status(400).json({ error: 'Missing fields' });
   }
 
@@ -48,8 +48,8 @@ module.exports = async (req, res) => {
     }
 
     await conn.execute(
-      'INSERT INTO dating_responses (room, nickname, food, date, time) VALUES (?, ?, ?, ?, ?)',
-      [room, nickname, food, date, time]
+      'INSERT INTO dating_responses (room, food, date, time) VALUES (?, ?, ?, ?)',
+      [room, food, date, time]
     );
 
     await conn.end();

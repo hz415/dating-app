@@ -6,7 +6,6 @@
 // ── 全局状态 ──
 const AppState = {
   currentPage: 'welcome',
-  nickname: '',
   room: '',
   selectedFood: '',
   selectedDate: '',
@@ -354,48 +353,51 @@ function initApp() {
 
 document.addEventListener('DOMContentLoaded', initApp);
 
-// ── 昵称提交 ──
-function submitNickname() {
-  const input = document.getElementById('nickname-input');
-  if (!input || !input.value.trim()) {
-    input.style.borderColor = '#FF4444';
-    input.placeholder = '请输入昵称哦~';
-    return;
-  }
-  AppState.nickname = input.value.trim();
-
-  // 处理房间号
-  const roomInput = document.getElementById('room-input');
-  let room = roomInput ? roomInput.value.trim() : '';
-  if (!room) {
-    // 自动生成4位房间号
-    room = Math.random().toString(36).substring(2, 6);
-    const hint = document.getElementById('room-hint');
-    if (hint) hint.textContent = '你的房间号是：' + room + '（已自动创建，请发给对方）';
-    if (roomInput) roomInput.value = room;
-  }
+// ── 创建房间 ──
+function createRoom() {
+  const room = Math.random().toString(36).substring(2, 6);
   AppState.room = room;
 
-  // 把房间号写入URL（方便分享）
   const url = new URL(window.location);
   url.searchParams.set('room', room);
   window.history.replaceState({}, '', url);
 
-  navigateTo('invite');
+  const fullLink = url.href;
+
+  document.getElementById('create-section').style.display = 'none';
+  document.getElementById('link-section').style.display = 'block';
+  document.getElementById('room-display').textContent = '房间号：' + room;
+  document.getElementById('link-display').textContent = fullLink;
+}
+
+function copyInviteLink() {
+  const link = document.getElementById('link-display').textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(link).then(function() {
+      showToast('链接已复制，快发给TA吧~');
+    });
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = link;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('链接已复制，快发给TA吧~');
+  }
 }
 
 // ── 数据库 API ──
 const API_BASE = 'https://dating-52f0glmfp-hz5.vercel.app/api';
 
 async function saveToDatabase() {
-  if (!AppState.nickname) return;
+  if (!AppState.room) return;
   try {
     await fetch(`${API_BASE}/save`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         room: AppState.room,
-        nickname: AppState.nickname,
         food: AppState.selectedFood,
         date: AppState.selectedDate,
         time: AppState.selectedTime,
@@ -417,47 +419,27 @@ async function loadReplies() {
     const data = json.data || [];
 
     if (data.length === 0) {
-      list.innerHTML = '<p style="color:#ccc;text-align:center;padding:20px;">还没有人回复哦，快去邀请吧~</p>';
+      list.innerHTML = '<p style="color:#ccc;text-align:center;padding:20px;">还没有人回复哦，把链接发给TA吧~</p>';
       return;
     }
 
-    let html = '';
-    data.forEach((item, i) => {
-      const dateDisplay = item.date ? formatDisplayDate(item.date) : '未选择';
-      const timeDisplay = item.time || '未选择';
-      const foodDisplay = item.food || '未选择';
-      const nickname = item.nickname || '匿名';
-      const createdAt = item.created_at ? new Date(item.created_at).toLocaleString('zh-CN') : '';
+    // 只显示最新一条
+    const item = data[0];
+    const dateDisplay = item.date ? formatDisplayDate(item.date) : '未选择';
+    const timeDisplay = item.time || '未选择';
+    const foodDisplay = item.food || '未选择';
 
-      html += '<div style="background: ' + (i % 2 === 0 ? '#FFF0F3' : '#FFF8FA') + '; border: 2px solid #FFD1DC; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 2px 2px 0 0 #FFE0E6;">'
-        + '<div style="font-size: 1rem; font-weight: bold; color: #FF6B8A; margin-bottom: 8px;">' + nickname + '</div>'
-        + '<div style="font-size: 0.85rem; color: #666; line-height: 1.6;">🍽 ' + foodDisplay + ' &nbsp; 📅 ' + dateDisplay + ' &nbsp; ⏰ ' + timeDisplay + '</div>'
-        + (createdAt ? '<div style="font-size: 0.75rem; color: #bbb; margin-top: 4px;">' + createdAt + '</div>' : '')
-        + '</div>';
-    });
-    list.innerHTML = html;
+    list.innerHTML = '<div style="background: #FFF0F3; border: 2px solid #FFD1DC; border-radius: 12px; padding: 20px 16px; box-shadow: 2px 2px 0 0 #FFE0E6;">'
+      + '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
+      + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + foodDisplay + '</span><br>'
+      + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateDisplay + '</span><br>'
+      + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + timeDisplay + '</span>'
+      + '</div>'
+      + (item.created_at ? '<div style="font-size: 0.75rem; color: #bbb; margin-top: 8px; text-align: right;">' + new Date(item.created_at).toLocaleString('zh-CN') + '</div>' : '')
+      + '</div>';
   } catch (e) {
     list.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">加载失败，请检查网络后重试</p>';
     console.warn('Load replies failed:', e);
-  }
-}
-
-// ── 复制结果 ──
-function copyResult() {
-  const dateDisplay = AppState.selectedDate ? formatDisplayDate(AppState.selectedDate) : '';
-  const text = '约会回复：' + dateDisplay + ' ' + (AppState.selectedTime || '') + '，一起去吃' + (AppState.selectedFood || '') + '！';
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(function() {
-      showToast('已复制到剪贴板，快发给TA吧~');
-    });
-  } else {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    showToast('已复制到剪贴板，快发给TA吧~');
   }
 }
 
@@ -474,7 +456,6 @@ function restartApp() {
   AppState.selectedFood = '';
   AppState.selectedDate = '';
   AppState.selectedTime = '';
-  AppState.currentPage = 'invite';
   localStorage.removeItem('dating_selectedDate');
   localStorage.removeItem('dating_selectedTime');
   localStorage.removeItem('dating_selectedFood');
@@ -483,13 +464,10 @@ function restartApp() {
 
 // ── 初始化 ──
 (function() {
-  // 从URL读取房间号
   const params = new URLSearchParams(window.location.search);
   const urlRoom = params.get('room');
   if (urlRoom) {
     AppState.room = urlRoom;
-    // B通过带房间号链接打开时，自动给匿名昵称，直接跳到邀请页
-    AppState.nickname = '匿名';
     const skipWelcome = function() {
       navigateTo('invite');
     };

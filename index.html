@@ -836,23 +836,23 @@ html.dark {
   <div style="max-width: 430px; width: 100%; position: relative; z-index: 1;">
     <div class="card" style="background: #FFF8FA; border: 3px solid #000000; box-shadow: 5px 5px 0 0 #000000; border-radius: 16px; padding: 28px 24px; text-align: center;">
       <div style="font-size: 2.5rem; margin-bottom: 12px;">🌸</div>
-      <h1 style="font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif; font-size: 1.6rem; font-weight: 900; color: #FF6B8A; margin: 0 0 8px;">嗨，欢迎！</h1>
-      <p style="font-size: 0.95rem; color: #FF8FA3; margin: 0 0 20px;">先告诉我你是谁呀~</p>
-      <input type="text" id="nickname-input" placeholder="输入你的昵称"
-        style="width: 100%; padding: 12px 16px; border: 2.5px solid #000; border-radius: 10px; font-size: 1rem; font-family: inherit; outline: none; box-sizing: border-box; margin-bottom: 16px; background: #fff;" />
+      <h1 style="font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif; font-size: 1.6rem; font-weight: 900; color: #FF6B8A; margin: 0 0 8px;">创建约会房间</h1>
+      <p style="font-size: 0.95rem; color: #FF8FA3; margin: 0 0 20px;">把链接发给TA，等待回复~</p>
 
-      <div id="room-section" style="margin-top: 16px; text-align: left;">
-        <p style="font-size: 0.85rem; color: #666; margin: 0 0 8px; text-align: center;">你有专属房间号吗？（没有就创建一个）</p>
-        <input type="text" id="room-input" placeholder="输入房间号（如 abcd）"
-          style="width: 100%; padding: 12px 16px; border: 2.5px solid #000; border-radius: 10px; font-size: 1rem; font-family: inherit; outline: none; box-sizing: border-box; margin-bottom: 12px; background: #fff;" />
-        <p id="room-hint" style="font-size: 0.75rem; color: #999; margin: 0 0 16px; text-align: center;">留空将自动创建新房间，记得把房间号发给对方哦~</p>
+      <!-- 创建前 -->
+      <div id="create-section">
+        <button class="cta-button" onclick="createRoom()"
+          style="display: inline-block; background: #FF6B8A; color: #fff; border: 2.5px solid #000; border-radius: 10px; padding: 14px 40px; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit; width: 100%; margin-bottom: 12px;">创建房间 ❤</button>
       </div>
 
-      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-        <button class="cta-button" onclick="submitNickname()"
-          style="display: inline-block; background: #FF6B8A; color: #fff; border: 2.5px solid #000; border-radius: 10px; padding: 12px 32px; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">开始约会 ❤</button>
+      <!-- 创建后显示链接 -->
+      <div id="link-section" style="display: none;">
+        <p id="room-display" style="font-size: 1rem; color: #FF6B8A; font-weight: bold; margin: 0 0 12px;">房间号：xxxx</p>
+        <div style="background: #fff; border: 2px solid #000; border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; word-break: break-all; font-size: 0.85rem; color: #333; text-align: left;" id="link-display">https://...</div>
+        <button class="cta-button" onclick="copyInviteLink()"
+          style="display: inline-block; background: #FF6B8A; color: #fff; border: 2.5px solid #000; border-radius: 10px; padding: 12px 32px; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit; width: 100%; margin-bottom: 12px;">复制链接发给TA 📋</button>
         <button class="cta-button" onclick="navigateTo('replies'); loadReplies()"
-          style="display: inline-block; background: #FFD1DC; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 12px 32px; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">查看回复 💌</button>
+          style="display: inline-block; background: #FFD1DC; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 12px 32px; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit; width: 100%;">查看对方回复 💌</button>
       </div>
     </div>
   </div>
@@ -1000,8 +1000,6 @@ html.dark {
             "
           >不要 &#129406;</button>
         </div>
-
-        <p style="margin-top: 10px; font-size: 0.8rem;"><a href="javascript:void(0)" onclick="navigateTo('replies'); loadReplies()" style="color: #FF6B8A; text-decoration: none;">偷偷看看大家的回复 →</a></p>
 
       </div>
       <!-- /Card -->
@@ -1294,10 +1292,8 @@ html.dark {
       </div>
 
       <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-        <button class="cta-button" onclick="copyResult()"
-          style="background: #FF6B8A; color: #fff; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">复制结果发给TA 📋</button>
         <button class="cta-button" onclick="navigateTo('replies'); loadReplies()"
-          style="background: #FFD1DC; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">查看大家的回复 💌</button>
+          style="background: #FFD1DC; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">查看我的回复 💌</button>
         <button class="cta-button" onclick="restartApp()"
           style="background: #FFD1DC; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">再来一次 🔄</button>
       </div>
@@ -1326,7 +1322,7 @@ html.dark {
   </div>
 
   <!-- Shared App Logic -->
-  <script src="app.js?v=7"></script>
+  <script src="app.js?v=8"></script>
 
   <!-- Calendar picker toggle (supplements app.js) -->
   <script>
