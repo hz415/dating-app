@@ -1,4 +1,4 @@
-const { kv } = require('@vercel/kv');
+const mysql = require('mysql2/promise');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -18,12 +18,29 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Missing fields' });
   }
 
+  let conn;
   try {
-    // 存储回复，key: dating:{room}
-    await kv.set('dating:' + room, JSON.stringify({ food, date, time, created_at: new Date().toISOString() }));
+    conn = await mysql.createConnection({
+      host: 'mysql6.sqlpub.com',
+      port: 3311,
+      user: 'wwwaiqing',
+      password: 'EVcOzR3W9RImaApx',
+      database: 'geng0031',
+    });
+
+    // 先删除旧回复（只保留最新一条）
+    await conn.execute('DELETE FROM dating_responses WHERE room = ?', [room]);
+    // 插入新回复
+    await conn.execute(
+      'INSERT INTO dating_responses (room, food, date, time, created_at) VALUES (?, ?, ?, ?, NOW())',
+      [room, food, date, time]
+    );
+
     res.status(200).json({ success: true });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Storage error' });
+    console.error('Save error:', err.message);
+    res.status(500).json({ error: err.message });
+  } finally {
+    if (conn) await conn.end();
   }
 };

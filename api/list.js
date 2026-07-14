@@ -1,4 +1,4 @@
-const { kv } = require('@vercel/kv');
+const mysql = require('mysql2/promise');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,19 +15,29 @@ module.exports = async (req, res) => {
 
   const { room } = req.query;
   if (!room) {
-    return res.status(400).json({ error: 'Missing room parameter' });
+    return res.status(400).json({ error: 'Missing room' });
   }
 
+  let conn;
   try {
-    const data = await kv.get('dating:' + room);
-    if (data) {
-      const parsed = JSON.parse(data);
-      res.status(200).json({ data: [parsed] });
-    } else {
-      res.status(200).json({ data: [] });
-    }
+    conn = await mysql.createConnection({
+      host: 'mysql6.sqlpub.com',
+      port: 3311,
+      user: 'wwwaiqing',
+      password: 'EVcOzR3W9RImaApx',
+      database: 'geng0031',
+    });
+
+    const [rows] = await conn.execute(
+      'SELECT food, date, time, created_at FROM dating_responses WHERE room = ? ORDER BY created_at DESC LIMIT 1',
+      [room]
+    );
+
+    res.status(200).json({ data: rows });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Storage error' });
+    console.error('List error:', err.message);
+    res.status(500).json({ error: err.message });
+  } finally {
+    if (conn) await conn.end();
   }
 };

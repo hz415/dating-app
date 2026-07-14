@@ -367,7 +367,6 @@ async function confirmSend() {
     return;
   }
 
-  // 禁用按钮防止重复点击
   const btn = document.getElementById('btn-confirm-send');
   if (btn) {
     btn.disabled = true;
@@ -375,16 +374,8 @@ async function confirmSend() {
     btn.style.opacity = '0.6';
   }
 
-  // 存到 localStorage（同设备回看用）
-  localStorage.setItem('dating_room_' + AppState.room, JSON.stringify({
-    food: foodStr, date: dateStr, time: timeStr, created_at: new Date().toISOString()
-  }));
-
-  // 生成回复链接（数据编码在 URL 里，跨设备无需后端）
-  const replyData = JSON.stringify({ food: foodStr, date: dateStr, time: timeStr });
-  const encoded = btoa(unescape(encodeURIComponent(replyData)));
-  const baseUrl = window.location.origin + window.location.pathname;
-  const replyLink = baseUrl + '?reply=' + encoded;
+  // 存到数据库
+  await saveToDatabase();
 
   // 显示发送成功页
   const dateText = dateStr ? formatDisplayDate(dateStr) : '未选择';
@@ -396,28 +387,8 @@ async function confirmSend() {
       + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + timeStr + '</span>'
       + '</div>';
   }
-  const linkDisplay = document.getElementById('reply-link-display');
-  if (linkDisplay) linkDisplay.textContent = replyLink;
 
   navigateTo('sent');
-}
-
-// ── 复制回复链接 ──
-function copyReplyLink() {
-  const link = document.getElementById('reply-link-display').textContent;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(link).then(function() {
-      showToast('回复链接已复制，发给对方吧~');
-    });
-  } else {
-    const ta = document.createElement('textarea');
-    ta.value = link;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    showToast('回复链接已复制，发给对方吧~');
-  }
 }
 
 // ── 创建房间（弹窗方式）──
@@ -562,65 +533,26 @@ function showToast(msg) {
 (function() {
   const params = new URLSearchParams(window.location.search);
   const urlRoom = params.get('room');
-  const urlReply = params.get('reply');
 
-  if (urlReply) {
-    // A 打开回复链接：解码数据直接显示结果
-    const goViewReply = function() {
-      try {
-        const decoded = decodeURIComponent(escape(atob(urlReply)));
-        const data = JSON.parse(decoded);
-        const dateText = data.date ? formatDisplayDate(data.date) : '未选择';
-        const timeText = data.time || '未选择';
-        const foodText = data.food || '未选择';
-        const list = document.getElementById('replies-list');
-        if (list) {
-          list.innerHTML = '<div style="background: #FFF0F3; border: 2px solid #FFD1DC; border-radius: 12px; padding: 20px 16px; box-shadow: 2px 2px 0 0 #FFE0E6;">'
-            + '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
-            + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + foodText + '</span><br>'
-            + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateText + '</span><br>'
-            + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + timeText + '</span>'
-            + '</div></div>';
-        }
-        navigateTo('replies');
-      } catch (e) {
-        navigateTo('welcome');
-      }
-    };
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() { setTimeout(goViewReply, 50); });
-    } else {
-      setTimeout(goViewReply, 50);
-    }
-  } else if (urlRoom) {
-    // B 打开带房间号的链接：检查是否已有回复
+  if (urlRoom) {
+    // B 打开带房间号的链接：先查数据库是否已有回复
     AppState.room = urlRoom;
     const checkExisting = async function() {
-      const local = localStorage.getItem('dating_room_' + urlRoom);
-      if (local) {
-        try {
-          const item = JSON.parse(local);
-          var dateText = item.date ? formatDisplayDate(item.date) : '未选择';
-          var sentSummary = document.getElementById('sent-summary');
-          if (sentSummary) {
-            sentSummary.innerHTML = '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
-              + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + (item.food || '未选择') + '</span><br>'
-              + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateText + '</span><br>'
-              + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + (item.time || '未选择') + '</span>'
-              + '</div>';
-          }
-          // 恢复回复链接
-          const replyData = JSON.stringify({ food: item.food, date: item.date, time: item.time });
-          const encoded = btoa(unescape(encodeURIComponent(replyData)));
-          const baseUrl = window.location.origin + window.location.pathname;
-          const linkDisplay = document.getElementById('reply-link-display');
-          if (linkDisplay) linkDisplay.textContent = baseUrl + '?reply=' + encoded;
-          navigateTo('sent');
-          return;
-        } catch (e) {}
+      const item = await fetchReply(urlRoom);
+      if (item) {
+        var dateText = item.date ? formatDisplayDate(item.date) : '未选择';
+        var sentSummary = document.getElementById('sent-summary');
+        if (sentSummary) {
+          sentSummary.innerHTML = '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
+            + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + (item.food || '未选择') + '</span><br>'
+            + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateText + '</span><br>'
+            + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + (item.time || '未选择') + '</span>'
+            + '</div>';
+        }
+        navigateTo('sent');
+      } else {
+        navigateTo('invite');
       }
-      // 没有回复，正常走流程
-      navigateTo('invite');
     };
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', checkExisting);
