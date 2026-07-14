@@ -281,10 +281,6 @@ function updateConfirmPage() {
 
   if (summaryText && dateStr && timeStr && foodStr) {
     summaryText.textContent = `${dateText} ${timeText}，我们去吃${foodText}。你带好胃口，我带好路线。`;
-    // Save to database
-    saveToDatabase();
-    // 标记B已完成（下次打开直接到确认页）
-    localStorage.setItem('dating_guestCompleted', 'true');
   } else {
     summaryText.textContent = '请完成所有选择后提交。';
   }
@@ -354,6 +350,48 @@ function initApp() {
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
+
+// ── 返回修改 ──
+function goBackEdit() {
+  navigateTo('date-pick');
+}
+
+// ── 确认发送 ──
+async function confirmSend() {
+  const dateStr = AppState.selectedDate || localStorage.getItem('dating_selectedDate') || '';
+  const timeStr = AppState.selectedTime || localStorage.getItem('dating_selectedTime') || '';
+  const foodStr = AppState.selectedFood || localStorage.getItem('dating_selectedFood') || '';
+
+  if (!dateStr || !timeStr || !foodStr) {
+    showToast('请先完成所有选择');
+    return;
+  }
+
+  // 禁用按钮防止重复点击
+  const btn = document.getElementById('btn-confirm-send');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '发送中...';
+    btn.style.opacity = '0.6';
+  }
+
+  await saveToDatabase();
+
+  // 显示发送成功页
+  const dateText = dateStr ? formatDisplayDate(dateStr) : '未选择';
+  const sentSummary = document.getElementById('sent-summary');
+  if (sentSummary) {
+    sentSummary.innerHTML = '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
+      + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + foodStr + '</span><br>'
+      + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateText + '</span><br>'
+      + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + timeStr + '</span>'
+      + '</div>';
+  }
+  navigateTo('sent');
+
+  // 标记已发送
+  localStorage.setItem('dating_guestSent', 'true');
+}
 
 // ── 创建房间 ──
 function createRoom() {
@@ -457,40 +495,36 @@ function showToast(msg) {
   setTimeout(function() { toast.remove(); }, 2500);
 }
 
-function restartApp() {
-  AppState.selectedFood = '';
-  AppState.selectedDate = '';
-  AppState.selectedTime = '';
-  localStorage.removeItem('dating_selectedDate');
-  localStorage.removeItem('dating_selectedTime');
-  localStorage.removeItem('dating_selectedFood');
-  localStorage.removeItem('dating_guestCompleted');
-  navigateTo('invite');
-}
-
 // ── 初始化 ──
 (function() {
   const params = new URLSearchParams(window.location.search);
   const urlRoom = params.get('room');
   const savedHostRoom = localStorage.getItem('dating_hostRoom');
-  const guestCompleted = localStorage.getItem('dating_guestCompleted');
 
-  if (urlRoom && guestCompleted === 'true') {
-    // B 之前已完成过，直接到确认页
+  if (urlRoom && localStorage.getItem('dating_guestSent') === 'true') {
+    // B 已经发送过，直接到已发送页
     AppState.room = urlRoom;
-    const goConfirm = function() {
-      // 恢复 B 的选择
+    const goSent = function() {
       AppState.selectedFood = localStorage.getItem('dating_selectedFood') || '';
       AppState.selectedDate = localStorage.getItem('dating_selectedDate') || '';
       AppState.selectedTime = localStorage.getItem('dating_selectedTime') || '';
-      navigateTo('confirm');
+      const dateText = AppState.selectedDate ? formatDisplayDate(AppState.selectedDate) : '未选择';
+      const sentSummary = document.getElementById('sent-summary');
+      if (sentSummary) {
+        sentSummary.innerHTML = '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
+          + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + (AppState.selectedFood || '未选择') + '</span><br>'
+          + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateText + '</span><br>'
+          + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + (AppState.selectedTime || '未选择') + '</span>'
+          + '</div>';
+      }
+      navigateTo('sent');
     };
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(goConfirm, 50);
+        setTimeout(goSent, 50);
       });
     } else {
-      setTimeout(goConfirm, 50);
+      setTimeout(goSent, 50);
     }
   } else if (urlRoom) {
     // B 第一次打开，跳过欢迎页

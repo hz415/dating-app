@@ -1292,10 +1292,10 @@ html.dark {
       </div>
 
       <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-        <button class="cta-button" onclick="navigateTo('replies'); loadReplies()"
-          style="background: #FFD1DC; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">查看我的回复 💌</button>
-        <button class="cta-button" onclick="restartApp()"
-          style="background: #FFD1DC; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">再来一次 🔄</button>
+        <button class="cta-button" id="btn-back-edit" onclick="goBackEdit()"
+          style="background: #FFFFFF; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">返回修改 ✏️</button>
+        <button class="cta-button" id="btn-confirm-send" onclick="confirmSend()"
+          style="background: #FF6B8A; color: #fff; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">确认发送给对方 ❤</button>
       </div>
 
     </div>
@@ -1304,14 +1304,30 @@ html.dark {
   <!-- /page-confirm -->
 
   <!-- ══════════════════════════════════════════════════════════════
+       PAGE: SENT
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="app-page" id="page-sent" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 24px 16px;">
+    <div style="max-width: 430px; width: 100%; position: relative; z-index: 1;">
+      <div class="card" style="background: #FFF8FA; border: 3px solid #000000; box-shadow: 5px 5px 0 0 #000000; border-radius: 16px; padding: 32px 24px; text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: 12px;">🎉</div>
+        <h1 style="font-family: 'Comic Sans MS', cursive; font-size: 1.5rem; font-weight: 900; color: #FF6B8A; margin: 0 0 8px;">已发送成功！</h1>
+        <p style="font-size: 0.95rem; color: #FF8FA3; margin: 0 0 20px;">对方已经收到你的回复啦~</p>
+        <div id="sent-summary" style="background: #FFF0F3; border: 2px solid #FFD1DC; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /page-sent -->
+
+  <!-- ══════════════════════════════════════════════════════════════
        PAGE: REPLIES
        ══════════════════════════════════════════════════════════════ -->
   <div class="app-page" id="page-replies" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 20px;">
     <div style="max-width: 430px; width: 100%; position: relative; z-index: 1;">
       <div class="card" style="background: #FFF8FA; border: 3px solid #000000; box-shadow: 5px 5px 0 0 #000000; border-radius: 16px; padding: 28px 24px; text-align: center;">
         <div style="font-size: 2rem; margin-bottom: 8px;">💌</div>
-        <h1 style="font-family: 'Comic Sans MS', cursive; font-size: 1.4rem; color: #FF6B8A; margin: 0 0 6px;">大家的回复</h1>
-        <p style="font-size: 0.85rem; color: #FF8FA3; margin: 0 0 20px;">看看大家都选了什么~</p>
+        <h1 style="font-family: 'Comic Sans MS', cursive; font-size: 1.4rem; color: #FF6B8A; margin: 0 0 6px;">对方的回复</h1>
+        <p style="font-size: 0.85rem; color: #FF8FA3; margin: 0 0 20px;">看看TA选了什么~</p>
         <div id="replies-list" style="text-align: left; max-height: 60vh; overflow-y: auto;">
           <p style="color: #999; text-align: center; padding: 20px;">加载中...</p>
         </div>
@@ -1322,7 +1338,7 @@ html.dark {
   </div>
 
   <!-- Shared App Logic -->
-  <script src="app.js?v=10"></script>
+  <script src="app.js?v=11"></script>
 
   <!-- Calendar picker toggle (supplements app.js) -->
   <script>
