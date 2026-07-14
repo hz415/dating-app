@@ -28,6 +28,16 @@ module.exports = async (req, res) => {
       database: 'geng0031',
     });
 
+    // 自动建表
+    await conn.execute(`CREATE TABLE IF NOT EXISTS dating_responses (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      room VARCHAR(20) NOT NULL,
+      food VARCHAR(50),
+      date VARCHAR(20),
+      time VARCHAR(10),
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`);
+
     const [rows] = await conn.execute(
       'SELECT food, date, time, created_at FROM dating_responses WHERE room = ? ORDER BY created_at DESC LIMIT 1',
       [room]
