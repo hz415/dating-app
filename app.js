@@ -443,7 +443,7 @@ async function loadReplies() {
       + (item.created_at ? '<div style="font-size: 0.75rem; color: #bbb; margin-top: 8px; text-align: right;">' + new Date(item.created_at).toLocaleString('zh-CN') + '</div>' : '')
       + '</div>';
   } catch (e) {
-    list.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">加载失败，请检查网络后重试</p>';
+    list.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">加载失败，请检查网络后重试</p><p style="color:#ccc;text-align:center;font-size:0.75rem;">' + e.message + '</p>';
     console.warn('Load replies failed:', e);
   }
 }
@@ -486,9 +486,11 @@ function restartApp() {
       navigateTo('confirm');
     };
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', goConfirm);
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(goConfirm, 50);
+      });
     } else {
-      goConfirm();
+      setTimeout(goConfirm, 50);
     }
   } else if (urlRoom) {
     // B 第一次打开，跳过欢迎页
@@ -513,10 +515,13 @@ function restartApp() {
       document.getElementById('room-display').textContent = '房间号：' + savedHostRoom;
       document.getElementById('link-display').textContent = url.href;
     };
+    // 等 initApp 完成后再恢复（用 setTimeout 确保）
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', restoreHost);
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(restoreHost, 50);
+      });
     } else {
-      restoreHost();
+      setTimeout(restoreHost, 50);
     }
   }
 
