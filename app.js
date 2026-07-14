@@ -283,6 +283,8 @@ function updateConfirmPage() {
     summaryText.textContent = `${dateText} ${timeText}，我们去吃${foodText}。你带好胃口，我带好路线。`;
     // Save to database
     saveToDatabase();
+    // 标记B已完成（下次打开直接到确认页）
+    localStorage.setItem('dating_guestCompleted', 'true');
   } else {
     summaryText.textContent = '请完成所有选择后提交。';
   }
@@ -363,6 +365,9 @@ function createRoom() {
   window.history.replaceState({}, '', url);
 
   const fullLink = url.href;
+
+  // 保存到 localStorage，A退出后能恢复
+  localStorage.setItem('dating_hostRoom', room);
 
   document.getElementById('create-section').style.display = 'none';
   document.getElementById('link-section').style.display = 'block';
@@ -459,6 +464,7 @@ function restartApp() {
   localStorage.removeItem('dating_selectedDate');
   localStorage.removeItem('dating_selectedTime');
   localStorage.removeItem('dating_selectedFood');
+  localStorage.removeItem('dating_guestCompleted');
   navigateTo('invite');
 }
 
@@ -466,7 +472,26 @@ function restartApp() {
 (function() {
   const params = new URLSearchParams(window.location.search);
   const urlRoom = params.get('room');
-  if (urlRoom) {
+  const savedHostRoom = localStorage.getItem('dating_hostRoom');
+  const guestCompleted = localStorage.getItem('dating_guestCompleted');
+
+  if (urlRoom && guestCompleted === 'true') {
+    // B 之前已完成过，直接到确认页
+    AppState.room = urlRoom;
+    const goConfirm = function() {
+      // 恢复 B 的选择
+      AppState.selectedFood = localStorage.getItem('dating_selectedFood') || '';
+      AppState.selectedDate = localStorage.getItem('dating_selectedDate') || '';
+      AppState.selectedTime = localStorage.getItem('dating_selectedTime') || '';
+      navigateTo('confirm');
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', goConfirm);
+    } else {
+      goConfirm();
+    }
+  } else if (urlRoom) {
+    // B 第一次打开，跳过欢迎页
     AppState.room = urlRoom;
     const skipWelcome = function() {
       navigateTo('invite');
@@ -475,6 +500,23 @@ function restartApp() {
       document.addEventListener('DOMContentLoaded', skipWelcome);
     } else {
       skipWelcome();
+    }
+  } else if (savedHostRoom) {
+    // A 之前创建过房间，恢复
+    AppState.room = savedHostRoom;
+    const restoreHost = function() {
+      const url = new URL(window.location);
+      url.searchParams.set('room', savedHostRoom);
+      window.history.replaceState({}, '', url);
+      document.getElementById('create-section').style.display = 'none';
+      document.getElementById('link-section').style.display = 'block';
+      document.getElementById('room-display').textContent = '房间号：' + savedHostRoom;
+      document.getElementById('link-display').textContent = url.href;
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', restoreHost);
+    } else {
+      restoreHost();
     }
   }
 
