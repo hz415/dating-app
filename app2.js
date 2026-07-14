@@ -451,39 +451,40 @@ async function submitReplyRoom() {
   resultDiv.style.display = 'block';
   resultDiv.innerHTML = '<p style="color:#999;text-align:center;padding:10px;">加载中...</p>';
 
-  try {
-    const res = await fetch(`${API_BASE}/list?room=${encodeURIComponent(room)}`);
-    const json = await res.json();
-    const data = json.data || [];
+  const item = await fetchReply(room);
 
-    if (data.length === 0) {
-      resultDiv.innerHTML = '<p style="color:#ccc;text-align:center;padding:10px;font-size:0.9rem;">还没有人回复哦~</p>';
-      return;
-    }
-
-    const item = data[0];
-    const dateDisplay = item.date ? formatDisplayDate(item.date) : '未选择';
-    const timeDisplay = item.time || '未选择';
-    const foodDisplay = item.food || '未选择';
-
-    resultDiv.innerHTML = '<div style="background: #FFF0F3; border: 2px solid #FFD1DC; border-radius: 12px; padding: 16px; box-shadow: 2px 2px 0 0 #FFE0E6; text-align: left;">'
-      + '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
-      + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + foodDisplay + '</span><br>'
-      + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateDisplay + '</span><br>'
-      + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + timeDisplay + '</span>'
-      + '</div>'
-      + (item.created_at ? '<div style="font-size: 0.75rem; color: #bbb; margin-top: 8px; text-align: right;">' + new Date(item.created_at).toLocaleString('zh-CN') + '</div>' : '')
-      + '</div>';
-  } catch (e) {
-    resultDiv.innerHTML = '<p style="color:#999;text-align:center;padding:10px;font-size:0.85rem;">加载失败</p><p style="color:#ccc;text-align:center;font-size:0.75rem;">' + e.message + '</p>';
+  if (!item) {
+    resultDiv.innerHTML = '<p style="color:#ccc;text-align:center;padding:10px;font-size:0.9rem;">还没有人回复哦~</p>';
+    return;
   }
+
+  const dateDisplay = item.date ? formatDisplayDate(item.date) : '未选择';
+  const timeDisplay = item.time || '未选择';
+  const foodDisplay = item.food || '未选择';
+
+  resultDiv.innerHTML = '<div style="background: #FFF0F3; border: 2px solid #FFD1DC; border-radius: 12px; padding: 16px; box-shadow: 2px 2px 0 0 #FFE0E6; text-align: left;">'
+    + '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
+    + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + foodDisplay + '</span><br>'
+    + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateDisplay + '</span><br>'
+    + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + timeDisplay + '</span>'
+    + '</div>'
+    + (item.created_at ? '<div style="font-size: 0.75rem; color: #bbb; margin-top: 8px; text-align: right;">' + new Date(item.created_at).toLocaleString('zh-CN') + '</div>' : '')
+    + '</div>';
 }
 
-// ── 数据库 API ──
+// ── 数据存储（API + localStorage 双保险）──
 const API_BASE = 'https://dating-52f0glmfp-hz5.vercel.app/api';
 
 async function saveToDatabase() {
   if (!AppState.room) return;
+  // 同时存到 localStorage 作为备份
+  localStorage.setItem('dating_room_' + AppState.room, JSON.stringify({
+    food: AppState.selectedFood,
+    date: AppState.selectedDate,
+    time: AppState.selectedTime,
+    created_at: new Date().toISOString()
+  }));
+  // 尝试存到 API
   try {
     await fetch(`${API_BASE}/save`, {
       method: 'POST',
@@ -496,43 +497,26 @@ async function saveToDatabase() {
       })
     });
   } catch (e) {
-    console.warn('Save failed:', e);
+    console.warn('API save failed, localStorage backup saved:', e);
   }
 }
 
-async function loadReplies() {
-  const list = document.getElementById('replies-list');
-  if (!list) return;
-  list.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">加载中...</p>';
-
+async function fetchReply(room) {
+  // 先尝试 API
   try {
-    const res = await fetch(`${API_BASE}/list?room=${encodeURIComponent(AppState.room || '')}`);
+    const res = await fetch(`${API_BASE}/list?room=${encodeURIComponent(room)}`);
     const json = await res.json();
     const data = json.data || [];
-
-    if (data.length === 0) {
-      list.innerHTML = '<p style="color:#ccc;text-align:center;padding:20px;">还没有人回复哦，把链接发给TA吧~</p>';
-      return;
-    }
-
-    // 只显示最新一条
-    const item = data[0];
-    const dateDisplay = item.date ? formatDisplayDate(item.date) : '未选择';
-    const timeDisplay = item.time || '未选择';
-    const foodDisplay = item.food || '未选择';
-
-    list.innerHTML = '<div style="background: #FFF0F3; border: 2px solid #FFD1DC; border-radius: 12px; padding: 20px 16px; box-shadow: 2px 2px 0 0 #FFE0E6;">'
-      + '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
-      + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + foodDisplay + '</span><br>'
-      + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateDisplay + '</span><br>'
-      + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + timeDisplay + '</span>'
-      + '</div>'
-      + (item.created_at ? '<div style="font-size: 0.75rem; color: #bbb; margin-top: 8px; text-align: right;">' + new Date(item.created_at).toLocaleString('zh-CN') + '</div>' : '')
-      + '</div>';
+    if (data.length > 0) return data[0];
   } catch (e) {
-    list.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">加载失败，请检查网络后重试</p><p style="color:#ccc;text-align:center;font-size:0.75rem;">' + e.message + '</p>';
-    console.warn('Load replies failed:', e);
+    console.warn('API fetch failed, trying localStorage:', e);
   }
+  // API 失败，读 localStorage 备份
+  const local = localStorage.getItem('dating_room_' + room);
+  if (local) {
+    try { return JSON.parse(local); } catch (e) {}
+  }
+  return null;
 }
 
 function showToast(msg) {
@@ -550,35 +534,26 @@ function showToast(msg) {
   const urlRoom = params.get('room');
 
   if (urlRoom) {
-    // B 打开带房间号的链接：先查数据库是否已有回复
+    // B 打开带房间号的链接：先查是否有回复
     AppState.room = urlRoom;
-    const checkExisting = function() {
-      fetch(API_BASE + '/list?room=' + encodeURIComponent(urlRoom))
-        .then(function(r) { return r.json(); })
-        .then(function(json) {
-          var data = json.data || [];
-          if (data.length > 0) {
-            // 数据库已有回复，显示结果页
-            var item = data[0];
-            var dateText = item.date ? formatDisplayDate(item.date) : '未选择';
-            var sentSummary = document.getElementById('sent-summary');
-            if (sentSummary) {
-              sentSummary.innerHTML = '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
-                + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + (item.food || '未选择') + '</span><br>'
-                + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateText + '</span><br>'
-                + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + (item.time || '未选择') + '</span>'
-                + '</div>';
-            }
-            navigateTo('sent');
-          } else {
-            // 没有回复，正常走流程
-            navigateTo('invite');
-          }
-        })
-        .catch(function() {
-          // 查询失败（可能API不可用），正常走流程
-          navigateTo('invite');
-        });
+    const checkExisting = async function() {
+      const item = await fetchReply(urlRoom);
+      if (item) {
+        // 已有回复，显示结果页
+        var dateText = item.date ? formatDisplayDate(item.date) : '未选择';
+        var sentSummary = document.getElementById('sent-summary');
+        if (sentSummary) {
+          sentSummary.innerHTML = '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
+            + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + (item.food || '未选择') + '</span><br>'
+            + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateText + '</span><br>'
+            + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + (item.time || '未选择') + '</span>'
+            + '</div>';
+        }
+        navigateTo('sent');
+      } else {
+        // 没有回复，正常走流程
+        navigateTo('invite');
+      }
     };
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', checkExisting);
