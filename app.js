@@ -393,28 +393,21 @@ async function confirmSend() {
   localStorage.setItem('dating_guestSent', 'true');
 }
 
-// ── 创建房间 ──
+// ── 创建房间（弹窗方式）──
 function createRoom() {
   const room = Math.random().toString(36).substring(2, 6);
   AppState.room = room;
 
-  const url = new URL(window.location);
-  url.searchParams.set('room', room);
-  window.history.replaceState({}, '', url);
+  const baseUrl = window.location.origin + window.location.pathname;
+  const fullLink = baseUrl + '?room=' + room;
 
-  const fullLink = url.href;
-
-  // 保存到 localStorage，A退出后能恢复
-  localStorage.setItem('dating_hostRoom', room);
-
-  document.getElementById('create-section').style.display = 'none';
-  document.getElementById('link-section').style.display = 'block';
-  document.getElementById('room-display').textContent = '房间号：' + room;
-  document.getElementById('link-display').textContent = fullLink;
+  document.getElementById('modal-room-id').textContent = '房间号：' + room;
+  document.getElementById('modal-link-display').textContent = fullLink;
+  document.getElementById('room-modal').style.display = 'flex';
 }
 
-function copyInviteLink() {
-  const link = document.getElementById('link-display').textContent;
+function copyModalLink() {
+  const link = document.getElementById('modal-link-display').textContent;
   if (navigator.clipboard) {
     navigator.clipboard.writeText(link).then(function() {
       showToast('链接已复制，快发给TA吧~');
@@ -427,6 +420,62 @@ function copyInviteLink() {
     document.execCommand('copy');
     document.body.removeChild(ta);
     showToast('链接已复制，快发给TA吧~');
+  }
+}
+
+function closeRoomModal() {
+  document.getElementById('room-modal').style.display = 'none';
+}
+
+// ── 查看回复（弹窗方式）──
+function showReplyDialog() {
+  document.getElementById('reply-modal').style.display = 'flex';
+  document.getElementById('reply-modal-result').style.display = 'none';
+}
+
+function closeReplyModal() {
+  document.getElementById('reply-modal').style.display = 'none';
+}
+
+async function submitReplyRoom() {
+  const input = document.getElementById('reply-room-input');
+  if (!input || !input.value.trim()) {
+    input.style.borderColor = '#FF4444';
+    input.placeholder = '请输入房间号';
+    return;
+  }
+  const room = input.value.trim();
+  AppState.room = room;
+
+  const resultDiv = document.getElementById('reply-modal-result');
+  resultDiv.style.display = 'block';
+  resultDiv.innerHTML = '<p style="color:#999;text-align:center;padding:10px;">加载中...</p>';
+
+  try {
+    const res = await fetch(`${API_BASE}/list?room=${encodeURIComponent(room)}`);
+    const json = await res.json();
+    const data = json.data || [];
+
+    if (data.length === 0) {
+      resultDiv.innerHTML = '<p style="color:#ccc;text-align:center;padding:10px;font-size:0.9rem;">还没有人回复哦~</p>';
+      return;
+    }
+
+    const item = data[0];
+    const dateDisplay = item.date ? formatDisplayDate(item.date) : '未选择';
+    const timeDisplay = item.time || '未选择';
+    const foodDisplay = item.food || '未选择';
+
+    resultDiv.innerHTML = '<div style="background: #FFF0F3; border: 2px solid #FFD1DC; border-radius: 12px; padding: 16px; box-shadow: 2px 2px 0 0 #FFE0E6; text-align: left;">'
+      + '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
+      + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + foodDisplay + '</span><br>'
+      + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateDisplay + '</span><br>'
+      + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + timeDisplay + '</span>'
+      + '</div>'
+      + (item.created_at ? '<div style="font-size: 0.75rem; color: #bbb; margin-top: 8px; text-align: right;">' + new Date(item.created_at).toLocaleString('zh-CN') + '</div>' : '')
+      + '</div>';
+  } catch (e) {
+    resultDiv.innerHTML = '<p style="color:#999;text-align:center;padding:10px;font-size:0.85rem;">加载失败</p><p style="color:#ccc;text-align:center;font-size:0.75rem;">' + e.message + '</p>';
   }
 }
 
@@ -499,7 +548,6 @@ function showToast(msg) {
 (function() {
   const params = new URLSearchParams(window.location.search);
   const urlRoom = params.get('room');
-  const savedHostRoom = localStorage.getItem('dating_hostRoom');
 
   if (urlRoom && localStorage.getItem('dating_guestSent') === 'true') {
     // B 本地有发送记录，直接到已发送页
@@ -565,29 +613,6 @@ function showToast(msg) {
       document.addEventListener('DOMContentLoaded', checkExisting);
     } else {
       checkExisting();
-    }
-  } else if (savedHostRoom) {
-    // A 之前创建过房间，恢复
-    AppState.room = savedHostRoom;
-    const restoreHost = function() {
-      const url = new URL(window.location);
-      url.searchParams.set('room', savedHostRoom);
-      window.history.replaceState({}, '', url);
-      document.getElementById('create-section').style.display = 'none';
-      document.getElementById('link-section').style.display = 'block';
-      document.getElementById('room-display').textContent = '房间号：' + savedHostRoom;
-      document.getElementById('link-display').textContent = url.href;
-    };
-    // 等 initApp 完成后再恢复（用 setTimeout 确保）
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(restoreHost, 50);
-      });
-    } else {
-      setTimeout(restoreHost, 50);
-    }
-  }
-
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', renderCalendar);
   }
