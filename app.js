@@ -613,6 +613,9 @@ function showToast(msg) {
       document.addEventListener('DOMContentLoaded', checkExisting);
     } else {
       checkExisting();
+    }
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', renderCalendar);
   }
