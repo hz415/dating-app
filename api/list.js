@@ -31,6 +31,12 @@ module.exports = async (req, res) => {
       )
     `);
 
+    try {
+      await conn.execute('ALTER TABLE dating_responses ADD COLUMN room VARCHAR(20)');
+    } catch (e) {
+      // 列已存在，忽略错误
+    }
+
     const [rows] = await conn.execute(
       'SELECT nickname, food, date, time, created_at FROM dating_responses WHERE room = ? ORDER BY created_at DESC LIMIT 100',
       [room]

@@ -31,6 +31,13 @@ module.exports = async (req, res) => {
       )
     `);
 
+    // 兼容旧表：如果缺少 room 列则自动添加
+    try {
+      await conn.execute('ALTER TABLE dating_responses ADD COLUMN room VARCHAR(20)');
+    } catch (e) {
+      // 列已存在，忽略错误
+    }
+
     await conn.execute(
       'INSERT INTO dating_responses (room, nickname, food, date, time) VALUES (?, ?, ?, ?, ?)',
       [room, nickname, food, date, time]

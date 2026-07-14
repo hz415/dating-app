@@ -488,17 +488,15 @@ function restartApp() {
   const urlRoom = params.get('room');
   if (urlRoom) {
     AppState.room = urlRoom;
-    // 延迟填充到输入框（等DOM就绪）
-    const fillRoom = function() {
-      const roomInput = document.getElementById('room-input');
-      if (roomInput) roomInput.value = urlRoom;
-      const hint = document.getElementById('room-hint');
-      if (hint) hint.textContent = '已加入房间：' + urlRoom;
+    // B通过带房间号链接打开时，自动给匿名昵称，直接跳到邀请页
+    AppState.nickname = '匿名';
+    const skipWelcome = function() {
+      navigateTo('invite');
     };
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', fillRoom);
+      document.addEventListener('DOMContentLoaded', skipWelcome);
     } else {
-      fillRoom();
+      skipWelcome();
     }
   }
 
