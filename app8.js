@@ -494,9 +494,11 @@ async function saveToDatabase() {
     time: AppState.selectedTime,
     created_at: new Date().toISOString()
   }));
-  // 尝试存到 API
+  // 尝试存到 API（15秒超时）
   try {
-    await fetch(`${API_BASE}/save`, {
+    const controller = new AbortController();
+    const timer = setTimeout(function() { controller.abort(); }, 15000);
+    const res = await fetch(`${API_BASE}/save`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -504,18 +506,22 @@ async function saveToDatabase() {
         food: AppState.selectedFood,
         date: AppState.selectedDate,
         time: AppState.selectedTime,
-      })
+      }),
+      signal: controller.signal
     });
+    clearTimeout(timer);
+    const result = await res.text();
+    console.log('Save API response:', result);
   } catch (e) {
-    console.warn('API save failed, localStorage backup saved:', e);
+    console.warn('API save failed:', e.message);
   }
 }
 
 async function fetchReply(room) {
-  // 先尝试 API（5秒超时）
+  // 先尝试 API（15秒超时，中国访问美国服务器较慢）
   try {
     const controller = new AbortController();
-    const timer = setTimeout(function() { controller.abort(); }, 5000);
+    const timer = setTimeout(function() { controller.abort(); }, 15000);
     const res = await fetch(`${API_BASE}/list?room=${encodeURIComponent(room)}`, { signal: controller.signal });
     clearTimeout(timer);
     const text = await res.text();
@@ -523,11 +529,9 @@ async function fetchReply(room) {
     const json = JSON.parse(text);
     const data = json.data || [];
     if (data.length > 0) return data[0];
-    // API 返回空数据（数据库确实没有）
     return 'empty';
   } catch (e) {
     console.warn('API fetch failed:', e.message);
-    // 存储错误信息供 submitReplyRoom 使用
     window._lastApiError = e.message;
   }
   // API 失败或超时，读 localStorage 备份
