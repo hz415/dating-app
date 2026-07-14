@@ -1102,7 +1102,12 @@ html.dark {
   <!-- ══════════════════════════════════════════════════════════════
        PAGE: FOOD SELECT
        ══════════════════════════════════════════════════════════════ -->
-  <div class="app-page" id="page-food-select" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%;">
+  <div class="app-page" id="page-food-select" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; position: relative;">
+
+    <!-- 返回箭头 -->
+    <div style="position: absolute; top: 16px; left: 16px; z-index: 10; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #fff; border: 2px solid #000; box-shadow: 2px 2px 0 0 #000;" onclick="navigateTo('invite')">
+      <span style="font-size: 18px; line-height: 1;">&#8592;</span>
+    </div>
 
     <!-- Main Content -->
     <main class="w-full max-w-mobile mx-auto flex flex-col items-center px-6" style="min-height: auto; padding-top: 0; padding-bottom: 0; position: relative; z-index: 1;">
@@ -1182,7 +1187,12 @@ html.dark {
   <!-- ══════════════════════════════════════════════════════════════
        PAGE: DATE PICK
        ══════════════════════════════════════════════════════════════ -->
-  <div class="app-page" id="page-date-pick" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 20px;">
+  <div class="app-page" id="page-date-pick" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 20px; position: relative;">
+
+    <!-- 返回箭头 -->
+    <div style="position: absolute; top: 16px; left: 16px; z-index: 10; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #fff; border: 2px solid #000; box-shadow: 2px 2px 0 0 #000;" onclick="navigateTo('food-select')">
+      <span style="font-size: 18px; line-height: 1;">&#8592;</span>
+    </div>
 
     <!-- Card -->
     <div class="date-card" style="position: relative; z-index: 1;">
@@ -1251,7 +1261,12 @@ html.dark {
   <!-- ══════════════════════════════════════════════════════════════
        PAGE: CONFIRM
        ══════════════════════════════════════════════════════════════ -->
-  <div class="app-page" id="page-confirm" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 24px 16px;">
+  <div class="app-page" id="page-confirm" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 24px 16px; position: relative;">
+
+    <!-- 返回箭头 -->
+    <div style="position: absolute; top: 16px; left: 16px; z-index: 10; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #fff; border: 2px solid #000; box-shadow: 2px 2px 0 0 #000;" onclick="navigateTo('date-pick')">
+      <span style="font-size: 18px; line-height: 1;">&#8592;</span>
+    </div>
 
     <div class="confirm-card" style="position: relative; z-index: 1;">
 
@@ -1292,10 +1307,8 @@ html.dark {
       </div>
 
       <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-        <button class="cta-button" id="btn-back-edit" onclick="goBackEdit()"
-          style="background: #FFFFFF; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">返回修改 ✏️</button>
         <button class="cta-button" id="btn-confirm-send" onclick="confirmSend()"
-          style="background: #FF6B8A; color: #fff; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">确认发送给对方 ❤</button>
+          style="background: #FF6B8A; color: #fff; border: 2.5px solid #000; border-radius: 10px; padding: 12px 32px; font-size: 0.95rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">确认发送给对方 ❤</button>
       </div>
 
     </div>
@@ -1338,7 +1351,7 @@ html.dark {
   </div>
 
   <!-- Shared App Logic -->
-  <script src="app.js?v=11"></script>
+  <script src="app.js?v=12"></script>
 
   <!-- Calendar picker toggle (supplements app.js) -->
   <script>
