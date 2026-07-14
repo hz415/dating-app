@@ -1,7 +1,6 @@
-const mysql = require('mysql2/promise');
+const { kv } = require('@vercel/kv');
 
 module.exports = async (req, res) => {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -20,42 +19,11 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const conn = await mysql.createConnection({
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT),
-      user: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
-    });
-
-    await conn.execute(`
-      CREATE TABLE IF NOT EXISTS dating_responses (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        room VARCHAR(20),
-        nickname VARCHAR(100),
-        food VARCHAR(100),
-        date VARCHAR(50),
-        time VARCHAR(20),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    // 兼容旧表：如果缺少 room 列则自动添加
-    try {
-      await conn.execute('ALTER TABLE dating_responses ADD COLUMN room VARCHAR(20)');
-    } catch (e) {
-      // 列已存在，忽略错误
-    }
-
-    await conn.execute(
-      'INSERT INTO dating_responses (room, food, date, time) VALUES (?, ?, ?, ?)',
-      [room, food, date, time]
-    );
-
-    await conn.end();
+    // 存储回复，key: dating:{room}
+    await kv.set('dating:' + room, JSON.stringify({ food, date, time, created_at: new Date().toISOString() }));
     res.status(200).json({ success: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Database error' });
+    res.status(500).json({ error: 'Storage error' });
   }
 };

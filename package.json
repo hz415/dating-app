@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "mysql2": "^3.0.0"
+    "@vercel/kv": "^3.0.0"
   }
 }

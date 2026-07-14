@@ -549,33 +549,8 @@ function showToast(msg) {
   const params = new URLSearchParams(window.location.search);
   const urlRoom = params.get('room');
 
-  if (urlRoom && localStorage.getItem('dating_guestSent') === 'true') {
-    // B 本地有发送记录，直接到已发送页
-    AppState.room = urlRoom;
-    const goSent = function() {
-      AppState.selectedFood = localStorage.getItem('dating_selectedFood') || '';
-      AppState.selectedDate = localStorage.getItem('dating_selectedDate') || '';
-      AppState.selectedTime = localStorage.getItem('dating_selectedTime') || '';
-      const dateText = AppState.selectedDate ? formatDisplayDate(AppState.selectedDate) : '未选择';
-      const sentSummary = document.getElementById('sent-summary');
-      if (sentSummary) {
-        sentSummary.innerHTML = '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
-          + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + (AppState.selectedFood || '未选择') + '</span><br>'
-          + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateText + '</span><br>'
-          + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + (AppState.selectedTime || '未选择') + '</span>'
-          + '</div>';
-      }
-      navigateTo('sent');
-    };
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(goSent, 50);
-      });
-    } else {
-      setTimeout(goSent, 50);
-    }
-  } else if (urlRoom) {
-    // B 打开链接：先查数据库是否已有回复
+  if (urlRoom) {
+    // B 打开带房间号的链接：先查数据库是否已有回复
     AppState.room = urlRoom;
     const checkExisting = function() {
       fetch(API_BASE + '/list?room=' + encodeURIComponent(urlRoom))
@@ -585,10 +560,6 @@ function showToast(msg) {
           if (data.length > 0) {
             // 数据库已有回复，显示结果页
             var item = data[0];
-            localStorage.setItem('dating_guestSent', 'true');
-            localStorage.setItem('dating_selectedFood', item.food || '');
-            localStorage.setItem('dating_selectedDate', item.date || '');
-            localStorage.setItem('dating_selectedTime', item.time || '');
             var dateText = item.date ? formatDisplayDate(item.date) : '未选择';
             var sentSummary = document.getElementById('sent-summary');
             if (sentSummary) {
@@ -605,7 +576,7 @@ function showToast(msg) {
           }
         })
         .catch(function() {
-          // 查询失败，正常走流程
+          // 查询失败（可能API不可用），正常走流程
           navigateTo('invite');
         });
     };
