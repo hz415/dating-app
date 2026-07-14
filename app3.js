@@ -502,16 +502,19 @@ async function saveToDatabase() {
 }
 
 async function fetchReply(room) {
-  // 先尝试 API
+  // 先尝试 API（3秒超时）
   try {
-    const res = await fetch(`${API_BASE}/list?room=${encodeURIComponent(room)}`);
+    const controller = new AbortController();
+    const timer = setTimeout(function() { controller.abort(); }, 3000);
+    const res = await fetch(`${API_BASE}/list?room=${encodeURIComponent(room)}`, { signal: controller.signal });
+    clearTimeout(timer);
     const json = await res.json();
     const data = json.data || [];
     if (data.length > 0) return data[0];
   } catch (e) {
-    console.warn('API fetch failed, trying localStorage:', e);
+    console.warn('API fetch failed, trying localStorage:', e.message);
   }
-  // API 失败，读 localStorage 备份
+  // API 失败或超时，读 localStorage 备份
   const local = localStorage.getItem('dating_room_' + room);
   if (local) {
     try { return JSON.parse(local); } catch (e) {}
