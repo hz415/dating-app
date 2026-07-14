@@ -1,0 +1,49 @@
+{
+  "name": "vibecoding-dating-app",
+  "version": "1.0.0",
+  "entry": "index.html",
+  "children": [
+    {
+      "id": "page-invite",
+      "name": "邀请页",
+      "type": "page",
+      "file": "index.html"
+    },
+    {
+      "id": "page-surprised",
+      "name": "惊喜确认页",
+      "type": "page",
+      "file": "index.html"
+    },
+    {
+      "id": "page-food-select",
+      "name": "选择食物",
+      "type": "page",
+      "file": "index.html"
+    },
+    {
+      "id": "page-date-pick",
+      "name": "选择日期时间",
+      "type": "page",
+      "file": "index.html"
+    },
+    {
+      "id": "page-confirm",
+      "name": "确认页",
+      "type": "page",
+      "file": "index.html"
+    },
+    {
+      "id": "page-welcome",
+      "name": "欢迎页",
+      "type": "page",
+      "file": "index.html"
+    },
+    {
+      "id": "page-replies",
+      "name": "查看回复",
+      "type": "page",
+      "file": "index.html"
+    }
+  ]
+}

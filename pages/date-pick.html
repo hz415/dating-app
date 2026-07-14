@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>选个日子 - Dating With Me</title>
+    <style id="theme-vars">
+/* ============================================
+   VibeCoding Dating App — Brand CSS
+   Replicated from video: clean white bg, pink accents
+   ============================================ */
+
+:root {
+  /* ── Brand Primary: Warm Pink ── */
+  --color-primary: #FF6B8A;
+  --color-primary-light: #FFB3C6;
+  --color-primary-lighter: #FFE0E8;
+  --color-primary-lightest: #FFF5F7;
+  --color-primary-dark: #E8556F;
+  --color-primary-darker: #CC3D5A;
+
+  /* ── Neutrals ── */
+  --color-bg: #F5F5F5;
+  --color-bg-soft: #FFFFFF;
+  --color-bg-muted: #F0F0F0;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-border: #E8E8E8;
+  --color-border-light: #F0F0F0;
+
+  /* ── Text ── */
+  --color-text-primary: #333333;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #999999;
+  --color-text-inverse: #FFFFFF;
+
+  /* ── State Colors ── */
+  --state-success: #07C160;
+  --state-warning: #FAAD14;
+  --state-error: #FA5151;
+  --state-info: #5B9FE8;
+
+  /* ── Typography ── */
+  --font-family-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-family-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+
+  --text-xs: 0.625rem;
+  --text-sm: 0.75rem;
+  --text-base: 0.875rem;
+  --text-lg: 1rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.25rem;
+  --text-3xl: 1.5rem;
+  --text-4xl: 2rem;
+  --text-5xl: 2.5rem;
+
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* ── Spacing ── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* ── Radius ── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+html.dark {
+  --color-primary: #FF6B8A;
+  --color-primary-light: #FF8FA6;
+  --color-primary-lighter: #3D2030;
+  --color-primary-lightest: #2A1520;
+  --color-primary-dark: #FF8FA6;
+  --color-primary-darker: #FFB3C6;
+
+  --color-bg: #1A1A1A;
+  --color-bg-soft: #242424;
+  --color-bg-muted: #2A2A2A;
+  --color-surface: #2A2A2A;
+  --color-surface-elevated: #333333;
+  --color-border: #3A3A3A;
+  --color-border-light: #333333;
+
+  --color-text-primary: #E8E8E8;
+  --color-text-secondary: #AAAAAA;
+  --color-text-tertiary: #777777;
+  --color-text-inverse: #1A1A1A;
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-primary: var(--color-primary);
+    --color-border: var(--color-border);
+  }
+  @layer base {
+    body { background: var(--color-surface); color: var(--color-text-primary); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body>
+
+  <!-- Floating background flowers -->
+  <span class="bg-flower bg-flower-1">&#127800;</span>
+  <span class="bg-flower bg-flower-2">&#127800;</span>
+  <span class="bg-flower bg-flower-3">&#127800;</span>
+  <span class="bg-flower bg-flower-4">&#127800;</span>
+  <span class="bg-flower bg-flower-5">&#127800;</span>
+  <span class="bg-flower bg-flower-6">&#127800;</span>
+  <span class="bg-flower bg-flower-7">&#127800;</span>
+  <span class="bg-flower bg-flower-8">&#127800;</span>
+  <span class="bg-flower bg-flower-9">&#127800;</span>
+  <span class="bg-flower bg-flower-10">&#127800;</span>
+
+    <!-- Card -->
+    <div class="date-card">
+
+      <!-- Calendar Icon -->
+      <div class="calendar-icon">6</div>
+
+      <!-- Main Heading -->
+      <h1>所以...你什么时候有空？😉</h1>
+
+      <!-- Date Input -->
+      <div class="input-group">
+        <label>选一天 📅</label>
+        <div class="time-input-wrapper">
+          <input type="text" value="2026/07/06" placeholder="年/月/日" readonly />
+        </div>
+
+        <!-- Calendar Date Picker (open state) -->
+        <div class="calendar-picker" id="calendarPicker">
+          <div class="calendar-header">
+            <span class="cal-nav" id="calPrevMonth">◀</span>
+            <span class="cal-month-label" id="calMonthLabel" onclick="toggleYMSelector()">2026年 7月</span>
+            <span class="cal-nav" id="calNextMonth">▶</span>
+          </div>
+
+          <!-- Year/Month quick selector -->
+          <div class="ym-selector" id="ymSelector">
+            <div class="ym-selector-row">
+              <label>年份</label>
+              <div class="ym-year-nav">
+                <span class="ym-year-btn" onclick="changeYearRange(-1)">◀◀</span>
+                <span class="ym-year-btn" id="ymYear1" onclick="pickYear(this)">2025</span>
+                <span class="ym-year-btn active" id="ymYear2" onclick="pickYear(this)">2026</span>
+                <span class="ym-year-btn" id="ymYear3" onclick="pickYear(this)">2027</span>
+                <span class="ym-year-btn" onclick="changeYearRange(1)">▶▶</span>
+              </div>
+            </div>
+            <div class="ym-selector-row">
+              <label>月份</label>
+              <div class="month-grid">
+                <span class="ym-month-btn" onclick="pickMonth(1)">1月</span>
+                <span class="ym-month-btn" onclick="pickMonth(2)">2月</span>
+                <span class="ym-month-btn" onclick="pickMonth(3)">3月</span>
+                <span class="ym-month-btn" onclick="pickMonth(4)">4月</span>
+                <span class="ym-month-btn" onclick="pickMonth(5)">5月</span>
+                <span class="ym-month-btn" onclick="pickMonth(6)">6月</span>
+                <span class="ym-month-btn active" onclick="pickMonth(7)">7月</span>
+                <span class="ym-month-btn" onclick="pickMonth(8)">8月</span>
+                <span class="ym-month-btn" onclick="pickMonth(9)">9月</span>
+                <span class="ym-month-btn" onclick="pickMonth(10)">10月</span>
+                <span class="ym-month-btn" onclick="pickMonth(11)">11月</span>
+                <span class="ym-month-btn" onclick="pickMonth(12)">12月</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="calendar-grid" id="calGrid">
+            <!-- Day headers -->
+            <div class="cal-day-header">日</div>
+            <div class="cal-day-header">一</div>
+            <div class="cal-day-header">二</div>
+            <div class="cal-day-header">三</div>
+            <div class="cal-day-header">四</div>
+            <div class="cal-day-header">五</div>
+            <div class="cal-day-header">六</div>
+            <!-- Day cells rendered by JS -->
+          </div>
+          <div class="calendar-footer">
+            <span class="cal-footer-btn cal-today-btn" onclick="goTodayStatic()">今天</span>
+            <span class="cal-footer-btn cal-clear-btn" onclick="clearDateStatic()">清除</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Time Input -->
+      <div class="input-group">
+        <label>几点见？⏰</label>
+        <div class="time-input-wrapper">
+          <input type="text" value="16:00" placeholder="选择时间..." readonly />
+        </div>
+
+        <!-- Time Picker Dropdown (scrollable) -->
+        <div class="time-picker-dropdown" id="timePickerDropdown">
+          <div class="time-picker-header">选择时间...（上下滑动）</div>
+          <div class="time-slots" id="timeSlots">
+            <!-- Generated by JS: 00:00 ~ 23:30 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Button -->
+      <button class="cta-button" data-dom-id="btn-confirm">确定时间 ❤</button>
+
+    </div>
+
+
+    <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFF5F7 50%, #E8F8F0 100%);
+      color: #333333;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Floating flower emojis scattered on background */
+    @keyframes flowerFall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.7; }
+      90% { opacity: 0.5; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+    @keyframes flowerSway {
+      0%, 100% { margin-left: 0; }
+      25% { margin-left: 15px; }
+      75% { margin-left: -15px; }
+    }
+    .bg-flower {
+      position: fixed;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+      top: 0;
+      animation: flowerFall var(--fall-duration, 12s) linear var(--fall-delay, 0s) infinite,
+                 flowerSway var(--sway-duration, 4s) ease-in-out var(--sway-delay, 0s) infinite;
+    }
+    .bg-flower-1 { left: 8%; font-size: 1.5rem; --fall-duration: 11s; --fall-delay: 0s; --sway-duration: 3.5s; --sway-delay: 0s; }
+    .bg-flower-2 { left: 85%; font-size: 1.1rem; --fall-duration: 14s; --fall-delay: 2s; --sway-duration: 4s; --sway-delay: 1s; }
+    .bg-flower-3 { left: 18%; font-size: 0.9rem; --fall-duration: 10s; --fall-delay: 4s; --sway-duration: 3s; --sway-delay: 0.5s; }
+    .bg-flower-4 { left: 90%; font-size: 1.3rem; --fall-duration: 13s; --fall-delay: 1s; --sway-duration: 5s; --sway-delay: 2s; }
+    .bg-flower-5 { left: 5%; font-size: 1.4rem; --fall-duration: 12s; --fall-delay: 3s; --sway-duration: 3.8s; --sway-delay: 1.5s; }
+    .bg-flower-6 { left: 88%; font-size: 1rem; --fall-duration: 15s; --fall-delay: 5s; --sway-duration: 4.2s; --sway-delay: 0.8s; }
+    .bg-flower-7 { left: 25%; font-size: 1.2rem; --fall-duration: 11s; --fall-delay: 6s; --sway-duration: 3.2s; --sway-delay: 2.5s; }
+    .bg-flower-8 { left: 95%; font-size: 0.85rem; --fall-duration: 16s; --fall-delay: 7s; --sway-duration: 4.5s; --sway-delay: 1.2s; }
+    .bg-flower-9 { left: 3%; font-size: 1.05rem; --fall-duration: 13s; --fall-delay: 8s; --sway-duration: 3.6s; --sway-delay: 0.3s; }
+    .bg-flower-10 { left: 6%; font-size: 0.75rem; --fall-duration: 17s; --fall-delay: 9s; --sway-duration: 5s; --sway-delay: 2s; }
+
+    /* ── Card ── */
+    .date-card {
+      width: 100%;
+      max-width: 360px;
+      background: #FFFFFF;
+      border: 3.5px solid #1A1A1A;
+      border-radius: 24px;
+      padding: 32px 28px 28px;
+      box-shadow: 4px 4px 0 0 #000000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Pink decorative blob bottom-right ── */
+    .date-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      width: 80px;
+      height: 80px;
+      background: #FFE0E8;
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    /* ── Calendar Icon ── */
+    .calendar-icon {
+      width: 56px;
+      height: 56px;
+      background: #FF6B8A;
+      border: 2px solid #1A1A1A;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 4px 4px 0 0 #000000;
+    }
+
+    /* ── Heading ── */
+    .date-card h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #333333;
+      text-align: center;
+      margin-bottom: 28px;
+      line-height: 1.4;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Input Groups ── */
+    .input-group {
+      width: 100%;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #333333;
+      margin-bottom: 8px;
+    }
+
+    .input-group input {
+      width: 100%;
+      height: 50px;
+      border: 2px solid #1A1A1A;
+      border-radius: 14px;
+      padding: 0 16px;
+      font-size: 15px;
+      color: #333333;
+      background: #FFFFFF;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      box-shadow: 3px 3px 0 0 #000000;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .input-group input::placeholder {
+      color: #C0C0C0;
+    }
+
+    .input-group input:focus {
+      border-color: #FF6B8A;
+    }
+
+    /* ── Time input wrapper with dropdown arrow ── */
+    .time-input-wrapper {
+      position: relative;
+    }
+
+    .time-input-wrapper::after {
+      content: '\25BC';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      color: #999999;
+      pointer-events: none;
+    }
+
+    /* ── CTA Button ── */
+    .cta-button {
+      width: 100%;
+      height: 52px;
+      border: none;
+      border-radius: 14px;
+      background: #FF6B8A;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 4px 4px 0 0 #000000;
+      font-family: inherit;
+      letter-spacing: 0.02em;
+      -webkit-tap-highlight-color: transparent;
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-button:hover {
+      box-shadow: 6px 6px 0 0 #000000;
+      transform: translateY(-2px);
+    }
+
+    .cta-button:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 8px rgba(255, 107, 138, 0.25);
+    }
+
+    /* ════════════════════════════════════════════
+       Calendar Date Picker (open state)
+       ════════════════════════════════════════════ */
+    .calendar-picker {
+      background: #FFFFFF;
+      border: 2px solid #1A1A1A;
+      border-radius: 14px;
+      box-shadow: 4px 4px 0 0 #000000;
+      padding: 14px;
+      margin-top: 8px;
+      width: 100%;
+      position: relative;
+      z-index: 20;
+      overflow: hidden;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Calendar header with month navigation */
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+      margin-bottom: 12px;
+    }
+
+    .cal-nav {
+      font-size: 14px;
+      color: #666666;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 6px;
+      user-select: none;
+      transition: background 0.15s;
+      background: #F5F5F5;
+      border: 1.5px solid #1A1A1A;
+      box-shadow: 2px 2px 0 0 #000000;
+      font-weight: 600;
+    }
+
+    .cal-nav:hover {
+      background: #FFE0E8;
+      transform: translateY(-1px);
+      box-shadow: 3px 3px 0 0 #000000;
+    }
+
+    .cal-nav:active {
+      transform: translateY(1px);
+      box-shadow: 1px 1px 0 0 #000000;
+    }
+
+    .cal-month-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: #333333;
+      text-align: center;
+      cursor: pointer;
+      padding: 4px 12px;
+      border-radius: 6px;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .cal-month-label:hover {
+      background: #F0F0F0;
+    }
+
+    /* Year/Month selector dropdown */
+    .ym-selector {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #FFFFFF;
+      border: 2px solid #1A1A1A;
+      border-radius: 14px;
+      box-shadow: 4px 4px 0 0 #000000;
+      padding: 12px;
+      z-index: 100;
+      display: none;
+      min-width: 200px;
+    }
+
+    .ym-selector.open {
+      display: block;
+    }
+
+    .ym-selector-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ym-selector-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .ym-selector-row label {
+      font-size: 12px;
+      color: #999999;
+      min-width: 32px;
+    }
+
+    .ym-year-btn, .ym-month-btn {
+      padding: 6px 10px;
+      border: 1.5px solid #1A1A1A;
+      border-radius: 8px;
+      background: #FFFFFF;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 #000000;
+      transition: all 0.15s;
+      font-weight: 500;
+      color: #333333;
+    }
+
+    .ym-year-btn:hover, .ym-month-btn:hover {
+      background: #FFE0E8;
+      transform: translateY(-1px);
+      box-shadow: 3px 3px 0 0 #000000;
+    }
+
+    .ym-year-btn:active, .ym-month-btn:active {
+      transform: translateY(1px);
+      box-shadow: 1px 1px 0 0 #000000;
+    }
+
+    .ym-year-btn.active, .ym-month-btn.active {
+      background: #FF6B8A;
+      color: #FFFFFF;
+      border-color: #1A1A1A;
+    }
+
+    /* Year navigation */
+    .ym-year-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .month-grid .ym-month-btn {
+      text-align: center;
+      padding: 8px 4px;
+      font-size: 13px;
+    }
+
+    /* Calendar grid: 7 columns */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0;
+      justify-items: center;
+      align-items: center;
+    }
+
+    .cal-day-header {
+      min-width: 36px;
+      height: 30px;
+      max-width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #999999;
+    }
+
+    .cal-day {
+      min-width: 36px;
+      height: 36px;
+      max-width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #333333;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.15s;
+      user-select: none;
+    }
+
+    .cal-day:hover {
+      background: #E8F0FE;
+    }
+
+    /* Empty placeholder cells */
+    .cal-day.empty {
+      cursor: default;
+    }
+
+    .cal-day.empty:hover {
+      background: transparent;
+    }
+
+    /* Days from previous/next month */
+    .cal-day.other-month {
+      color: #CCCCCC;
+      cursor: default;
+    }
+
+    .cal-day.other-month:hover {
+      background: transparent;
+    }
+
+    /* Selected date (6th): pink circle */
+    .cal-day.selected {
+      background: #FF6B8A;
+      color: #FFFFFF;
+      font-weight: 700;
+    }
+
+    .cal-day.selected:hover {
+      background: #FF6B8A;
+    }
+
+    /* Today (10th): subtle border only, not filled */
+    .cal-day.today {
+      border: 2px solid #FF6B8A;
+      color: #FF6B8A;
+      font-weight: 700;
+      border-radius: 50%;
+      background: transparent;
+    }
+
+    .cal-day.today:hover {
+      background: transparent;
+    }
+
+    /* Calendar footer */
+    .calendar-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding: 4px 4px 0;
+    }
+
+    .cal-footer-btn {
+      font-size: 13px;
+      color: #999999;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.15s;
+      user-select: none;
+    }
+
+    .cal-footer-btn:hover {
+      background: #F0F0F0;
+      color: #666666;
+    }
+
+    /* ════════════════════════════════════════════
+       Time Picker Dropdown (open state)
+       ════════════════════════════════════════════ */
+    .time-picker-dropdown {
+      background: #FFFFFF;
+      border: 2px solid #1A1A1A;
+      border-radius: 14px;
+      box-shadow: 4px 4px 0 0 #000000;
+      padding: 0;
+      margin-top: 8px;
+      width: 100%;
+      position: relative;
+      z-index: 20;
+      overflow: hidden;
+    }
+
+    .time-picker-header {
+      font-size: 12px;
+      color: #999999;
+      padding: 8px 16px 4px;
+    }
+
+    .time-slots {
+      display: flex;
+      flex-direction: column;
+      max-height: 220px;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .time-slot {
+      width: 100%;
+      height: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 15px;
+      color: #333333;
+      background: #FFFFFF;
+      border-bottom: 1px solid #F0F0F0;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      position: relative;
+      user-select: none;
+      scroll-snap-align: start;
+    }
+
+    .time-slot:hover {
+      background: #F5F5F5;
+    }
+
+    /* Selected time slot */
+    .time-slot.selected {
+      background: #FFE0E8;
+      color: #FF6B8A;
+      font-weight: 600;
+    }
+
+    .time-slot.selected:hover {
+      background: #FFE0E8;
+    }
+
+    /* Pink accent bar on the right for selected slot */
+    .time-slot.selected::after {
+      content: '';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 20px;
+      background: #FF6B8A;
+      border-radius: 4px;
+    }
+    </style>
+
+    <script>
+    // ── Calendar State ──
+    let calYear = 2026, calMonth = 7, selectedDate = '2026/07/06', selectedDay = 6;
+    let ymBaseYear = 2024; // year range base (shows base, base+1, base+2)
+
+    // ── Time Picker (24h, 30min intervals) ──
+    let selectedTime = '16:00';
+
+    function initTimePicker() {
+      const container = document.getElementById('timeSlots');
+      if (!container) return;
+      container.innerHTML = '';
+      for (let h = 0; h < 24; h++) {
+        for (let m = 0; m < 60; m += 30) {
+          const time = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+          const slot = document.createElement('div');
+          slot.className = 'time-slot';
+          slot.textContent = time;
+          if (time === selectedTime) slot.classList.add('selected');
+          slot.addEventListener('click', function() { selectTimeSlot(time); });
+          container.appendChild(slot);
+        }
+      }
+      // Scroll to selected
+      scrollToTime(selectedTime);
+    }
+
+    function selectTimeSlot(time) {
+      selectedTime = time;
+      localStorage.setItem('dating_selectedTime', time);
+      const timeInput = document.querySelector('input[placeholder="选择时间..."]');
+      if (timeInput) timeInput.value = time;
+      // 自动收起时间面板
+      const dropdown = document.getElementById('timePickerDropdown');
+      if (dropdown) dropdown.style.display = 'none';
+      // Update selected class
+      const slots = document.querySelectorAll('.time-slot');
+      slots.forEach(function(s) {
+        s.classList.toggle('selected', s.textContent === time);
+      });
+    }
+
+    function scrollToTime(time) {
+      const container = document.getElementById('timeSlots');
+      if (!container) return;
+      const slots = container.querySelectorAll('.time-slot');
+      slots.forEach(function(s) {
+        if (s.textContent === time) {
+          s.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+      });
+    }
+
+    // Touch swipe for time picker
+    function bindTimeSwipe() {
+      const container = document.getElementById('timeSlots');
+      if (!container) return;
+      container.addEventListener('scrollend', function() {
+        // Snap to nearest slot on scroll end
+        const slots = container.querySelectorAll('.time-slot');
+        const containerRect = container.getBoundingClientRect();
+        const centerY = containerRect.top + containerRect.height / 2;
+        let closest = null, minDist = Infinity;
+        slots.forEach(function(s) {
+          const rect = s.getBoundingClientRect();
+          const dist = Math.abs(rect.top + rect.height / 2 - centerY);
+          if (dist < minDist) { minDist = dist; closest = s; }
+        });
+        if (closest) {
+          selectTimeSlot(closest.textContent);
+        }
+      });
+    }
+
+    // ── Init ──
+    document.addEventListener('DOMContentLoaded', function() {
+      renderCalendar();
+      bindSwipe();
+      initTimePicker();
+      bindTimeSwipe();
+      document.getElementById('calPrevMonth').addEventListener('click', prevMonth);
+      document.getElementById('calNextMonth').addEventListener('click', nextMonth);
+    });
+
+    // ── Render Calendar ──
+    function renderCalendar() {
+      const grid = document.getElementById('calGrid');
+      const headers = Array.from(grid.querySelectorAll('.cal-day-header'));
+      grid.innerHTML = '';
+      headers.forEach(h => grid.appendChild(h));
+
+      const daysInMonth = new Date(calYear, calMonth, 0).getDate();
+      const firstDay = new Date(calYear, calMonth - 1, 1).getDay();
+      const today = new Date();
+      const todayStr = today.getFullYear() + '/' + (today.getMonth() + 1) + '/' + today.getDate();
+
+      // Empty cells
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'cal-day empty';
+        grid.appendChild(empty);
+      }
+
+      // Day cells
+      for (let d = 1; d <= daysInMonth; d++) {
+        const cell = document.createElement('div');
+        const dateStr = calYear + '/' + String(calMonth).padStart(2, '0') + '/' + String(d).padStart(2, '0');
+        cell.className = 'cal-day';
+        cell.textContent = d;
+        if (dateStr === selectedDate) cell.classList.add('selected');
+        if (dateStr === todayStr) cell.classList.add('today');
+        cell.addEventListener('click', function() { selectDay(d, dateStr); });
+        grid.appendChild(cell);
+      }
+
+      // Update label
+      document.getElementById('calMonthLabel').textContent = calYear + '年 ' + calMonth + '月';
+
+      // Update calendar icon
+      const icon = document.querySelector('.calendar-icon');
+      if (icon && selectedDay) icon.textContent = selectedDay;
+    }
+
+    function selectDay(day, dateStr) {
+      selectedDay = day;
+      selectedDate = dateStr;
+      localStorage.setItem('dating_selectedDate', dateStr);
+      const dateInput = document.querySelector('#date-input') || document.querySelector('input[placeholder="年/月/日"]');
+      if (dateInput) dateInput.value = dateStr;
+      const icon = document.querySelector('.calendar-icon');
+      if (icon) icon.textContent = day;
+      // 自动收起日历
+      const picker = document.getElementById('calendarPicker');
+      if (picker) picker.style.display = 'none';
+      renderCalendar();
+    }
+
+    function prevMonth() {
+      if (calMonth === 1) { calMonth = 12; calYear--; } else { calMonth--; }
+      renderCalendar();
+    }
+
+    function nextMonth() {
+      if (calMonth === 12) { calMonth = 1; calYear++; } else { calMonth++; }
+      renderCalendar();
+    }
+
+    // ── Year/Month Selector ──
+    function toggleYMSelector() {
+      const sel = document.getElementById('ymSelector');
+      sel.classList.toggle('open');
+      if (sel.classList.contains('open')) updateYMSelector();
+    }
+
+    function updateYMSelector() {
+      // Year buttons
+      document.getElementById('ymYear1').textContent = ymBaseYear;
+      document.getElementById('ymYear2').textContent = ymBaseYear + 1;
+      document.getElementById('ymYear3').textContent = ymBaseYear + 2;
+
+      // Highlight current year
+      [document.getElementById('ymYear1'), document.getElementById('ymYear2'), document.getElementById('ymYear3')].forEach(function(btn) {
+        btn.classList.toggle('active', parseInt(btn.textContent) === calYear);
+      });
+
+      // Highlight current month
+      var monthBtns = document.querySelectorAll('.month-grid .ym-month-btn');
+      monthBtns.forEach(function(btn, i) {
+        btn.classList.toggle('active', (i + 1) === calMonth);
+      });
+    }
+
+    function pickYear(el) {
+      calYear = parseInt(el.textContent);
+      updateYMSelector();
+      renderCalendar();
+    }
+
+    function pickMonth(m) {
+      calMonth = m;
+      updateYMSelector();
+      renderCalendar();
+    }
+
+    function changeYearRange(dir) {
+      ymBaseYear += dir * 3;
+      updateYMSelector();
+    }
+
+    function goTodayStatic() {
+      var today = new Date();
+      calYear = today.getFullYear();
+      calMonth = today.getMonth() + 1;
+      var dateStr = calYear + '/' + String(calMonth).padStart(2, '0') + '/' + String(today.getDate()).padStart(2, '0');
+      selectDay(today.getDate(), dateStr);
+      ymBaseYear = calYear - 1;
+      renderCalendar();
+    }
+
+    function clearDateStatic() {
+      selectedDate = '';
+      selectedDay = 0;
+      var dateInput = document.querySelector('#date-input') || document.querySelector('input[placeholder="年/月/日"]');
+      if (dateInput) dateInput.value = '';
+      var icon = document.querySelector('.calendar-icon');
+      if (icon) icon.textContent = '?';
+      renderCalendar();
+    }
+
+    // ── Touch Swipe ──
+    function bindSwipe() {
+      var picker = document.getElementById('calendarPicker');
+      if (!picker) return;
+      var startX = 0, startY = 0, distX = 0;
+      picker.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }, { passive: true });
+      picker.addEventListener('touchmove', function(e) {
+        distX = e.touches[0].clientX - startX;
+      }, { passive: true });
+      picker.addEventListener('touchend', function(e) {
+        var deltaY = Math.abs(e.changedTouches[0].clientY - startY);
+        if (Math.abs(distX) > 50 && deltaY < 30) {
+          if (distX < 0) nextMonth(); else prevMonth();
+        }
+        distX = 0;
+      }, { passive: true });
+    }
+
+    // Close YM selector when clicking outside
+    document.addEventListener('click', function(e) {
+      var sel = document.getElementById('ymSelector');
+      var label = document.getElementById('calMonthLabel');
+      if (sel && !sel.contains(e.target) && e.target !== label) {
+        sel.classList.remove('open');
+      }
+    });
+    </script>
+</body>
+</html>
