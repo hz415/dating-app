@@ -5,7 +5,8 @@
 
 // ── 全局状态 ──
 const AppState = {
-  currentPage: 'invite',
+  currentPage: 'welcome',
+  nickname: '',
   selectedFood: '',
   selectedDate: '',
   selectedTime: '',
@@ -280,6 +281,8 @@ function updateConfirmPage() {
 
   if (summaryText && dateStr && timeStr && foodStr) {
     summaryText.textContent = `${dateText} ${timeText}，我们去吃${foodText}。你带好胃口，我带好路线。`;
+    // Save to database
+    saveToDatabase();
   } else {
     summaryText.textContent = '请完成所有选择后提交。';
   }
@@ -326,7 +329,7 @@ function initApp() {
     p.style.display = 'none';
     p.classList.remove('active');
   });
-  const firstPage = document.getElementById('page-invite');
+  const firstPage = document.getElementById('page-welcome');
   if (firstPage) {
     firstPage.style.display = 'flex';
     firstPage.classList.add('active');
@@ -350,12 +353,81 @@ function initApp() {
 
 document.addEventListener('DOMContentLoaded', initApp);
 
+// ── 昵称提交 ──
+function submitNickname() {
+  const input = document.getElementById('nickname-input');
+  if (!input || !input.value.trim()) {
+    input.style.borderColor = '#FF4444';
+    input.placeholder = '请输入昵称哦~';
+    return;
+  }
+  AppState.nickname = input.value.trim();
+  navigateTo('invite');
+}
+
+// ── 数据库 API ──
+const API_BASE = '/api';
+
+async function saveToDatabase() {
+  if (!AppState.nickname) return;
+  try {
+    await fetch(`${API_BASE}/save`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nickname: AppState.nickname,
+        food: AppState.selectedFood,
+        date: AppState.selectedDate,
+        time: AppState.selectedTime,
+      })
+    });
+  } catch (e) {
+    console.warn('Save failed:', e);
+  }
+}
+
+async function loadReplies() {
+  const list = document.getElementById('replies-list');
+  if (!list) return;
+  list.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">加载中...</p>';
+
+  try {
+    const res = await fetch(`${API_BASE}/list`);
+    const json = await res.json();
+    const data = json.data || [];
+
+    if (data.length === 0) {
+      list.innerHTML = '<p style="color:#ccc;text-align:center;padding:20px;">还没有人回复哦，快去邀请吧~</p>';
+      return;
+    }
+
+    let html = '';
+    data.forEach((item, i) => {
+      const dateDisplay = item.date ? formatDisplayDate(item.date) : '未选择';
+      const timeDisplay = item.time || '未选择';
+      const foodDisplay = item.food || '未选择';
+      const nickname = item.nickname || '匿名';
+      const createdAt = item.created_at ? new Date(item.created_at).toLocaleString('zh-CN') : '';
+
+      html += '<div style="background: ' + (i % 2 === 0 ? '#FFF0F3' : '#FFF8FA') + '; border: 2px solid #FFD1DC; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 2px 2px 0 0 #FFE0E6;">'
+        + '<div style="font-size: 1rem; font-weight: bold; color: #FF6B8A; margin-bottom: 8px;">' + nickname + '</div>'
+        + '<div style="font-size: 0.85rem; color: #666; line-height: 1.6;">🍽 ' + foodDisplay + ' &nbsp; 📅 ' + dateDisplay + ' &nbsp; ⏰ ' + timeDisplay + '</div>'
+        + (createdAt ? '<div style="font-size: 0.75rem; color: #bbb; margin-top: 4px;">' + createdAt + '</div>' : '')
+        + '</div>';
+    });
+    list.innerHTML = html;
+  } catch (e) {
+    list.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">加载失败，请检查网络后重试</p>';
+    console.warn('Load replies failed:', e);
+  }
+}
+
 // ── 复制结果 ──
 function copyResult() {
   const dateDisplay = AppState.selectedDate ? formatDisplayDate(AppState.selectedDate) : '';
-  const text = `约会回复：${dateDisplay} ${AppState.selectedTime || ''}，一起去吃${AppState.selectedFood || ''}！`;
+  const text = '约会回复：' + dateDisplay + ' ' + (AppState.selectedTime || '') + '，一起去吃' + (AppState.selectedFood || '') + '！';
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => {
+    navigator.clipboard.writeText(text).then(function() {
       showToast('已复制到剪贴板，快发给TA吧~');
     });
   } else {
@@ -372,10 +444,10 @@ function copyResult() {
 function showToast(msg) {
   const toast = document.createElement('div');
   toast.textContent = msg;
-  toast.style.cssText = 'position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:#FF6B8A;color:#fff;padding:10px 20px;border-radius:20px;font-size:0.9rem;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,0.15);animation:fadeInUp 0.3s;';
+  toast.style.cssText = 'position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:#FF6B8A;color:#fff;padding:10px 20px;border-radius:20px;font-size:0.9rem;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
   document.body.appendChild(toast);
-  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; }, 2000);
-  setTimeout(() => { toast.remove(); }, 2500);
+  setTimeout(function() { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; }, 2000);
+  setTimeout(function() { toast.remove(); }, 2500);
 }
 
 function restartApp() {
@@ -391,7 +463,6 @@ function restartApp() {
 
 // ── 初始化 ──
 (function() {
-  // 页面加载时渲染日历
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', renderCalendar);
   }

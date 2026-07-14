@@ -682,6 +682,7 @@ html.dark {
       background: #FFFFFF;
       border-bottom: 1px solid #F0F0F0;
       cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
       transition: background 0.15s;
       position: relative;
       user-select: none;
@@ -829,9 +830,30 @@ html.dark {
 
 
   <!-- ══════════════════════════════════════════════════════════════
+       PAGE: WELCOME
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="app-page active" id="page-welcome" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 1.5rem;">
+  <div style="max-width: 430px; width: 100%; position: relative; z-index: 1;">
+    <div class="card" style="background: #FFF8FA; border: 3px solid #000000; box-shadow: 5px 5px 0 0 #000000; border-radius: 16px; padding: 28px 24px; text-align: center;">
+      <div style="font-size: 2.5rem; margin-bottom: 12px;">🌸</div>
+      <h1 style="font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif; font-size: 1.6rem; color: #FF6B8A; margin: 0 0 8px;">嗨，欢迎！</h1>
+      <p style="font-size: 0.95rem; color: #FF8FA3; margin: 0 0 24px;">先告诉我你是谁呀~</p>
+      <input type="text" id="nickname-input" placeholder="输入你的昵称"
+        style="width: 100%; padding: 12px 16px; border: 2.5px solid #000; border-radius: 10px; font-size: 1rem; font-family: inherit; outline: none; box-sizing: border-box; margin-bottom: 16px; background: #fff;" />
+      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <button class="cta-button" onclick="submitNickname()"
+          style="display: inline-block; background: #FF6B8A; color: #fff; border: 2.5px solid #000; border-radius: 10px; padding: 12px 32px; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">开始约会 ❤</button>
+        <button class="cta-button" onclick="navigateTo('replies'); loadReplies()"
+          style="display: inline-block; background: #FFD1DC; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 12px 32px; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">查看回复 💌</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- ══════════════════════════════════════════════════════════════
        PAGE: INVITE
        ══════════════════════════════════════════════════════════════ -->
-  <div class="app-page active" id="page-invite" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 1.5rem;">
+  <div class="app-page" id="page-invite" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 1.5rem;">
 
     <!-- Mobile container -->
     <div style="max-width: 430px; width: 100%; position: relative; z-index: 1;">
@@ -970,6 +992,8 @@ html.dark {
             "
           >不要 &#129406;</button>
         </div>
+
+        <p style="margin-top: 10px; font-size: 0.8rem;"><a href="javascript:void(0)" onclick="navigateTo('replies'); loadReplies()" style="color: #FF6B8A; text-decoration: none;">偷偷看看大家的回复 →</a></p>
 
       </div>
       <!-- /Card -->
@@ -1264,6 +1288,8 @@ html.dark {
       <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
         <button class="cta-button" onclick="copyResult()"
           style="background: #FF6B8A; color: #fff; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">复制结果发给TA 📋</button>
+        <button class="cta-button" onclick="navigateTo('replies'); loadReplies()"
+          style="background: #FFD1DC; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">查看大家的回复 💌</button>
         <button class="cta-button" onclick="restartApp()"
           style="background: #FFD1DC; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; font-family: inherit;">再来一次 🔄</button>
       </div>
@@ -1272,6 +1298,24 @@ html.dark {
 
   </div>
   <!-- /page-confirm -->
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PAGE: REPLIES
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="app-page" id="page-replies" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 20px;">
+    <div style="max-width: 430px; width: 100%; position: relative; z-index: 1;">
+      <div class="card" style="background: #FFF8FA; border: 3px solid #000000; box-shadow: 5px 5px 0 0 #000000; border-radius: 16px; padding: 28px 24px; text-align: center;">
+        <div style="font-size: 2rem; margin-bottom: 8px;">💌</div>
+        <h1 style="font-family: 'Comic Sans MS', cursive; font-size: 1.4rem; color: #FF6B8A; margin: 0 0 6px;">大家的回复</h1>
+        <p style="font-size: 0.85rem; color: #FF8FA3; margin: 0 0 20px;">看看大家都选了什么~</p>
+        <div id="replies-list" style="text-align: left; max-height: 60vh; overflow-y: auto;">
+          <p style="color: #999; text-align: center; padding: 20px;">加载中...</p>
+        </div>
+        <button class="cta-button" onclick="navigateTo('welcome')"
+          style="display: inline-block; background: #FFD1DC; color: #FF6B8A; border: 2.5px solid #000; border-radius: 10px; padding: 10px 24px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0 0 #000; margin-top: 16px; font-family: inherit;">返回首页</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Shared App Logic -->
   <script src="app.js?v=4"></script>
