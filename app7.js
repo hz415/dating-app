@@ -442,7 +442,14 @@ async function submitReplyRoom() {
     input.placeholder = '请输入房间号';
     return;
   }
-  const room = input.value.trim();
+  // 智能提取房间号：支持粘贴完整链接或只输入房间号
+  let room = input.value.trim();
+  try {
+    const url = new URL(room);
+    room = url.searchParams.get('room') || room;
+  } catch (e) {
+    // 不是链接，直接当作房间号
+  }
   AppState.room = room;
 
   const resultDiv = document.getElementById('reply-modal-result');
@@ -451,8 +458,13 @@ async function submitReplyRoom() {
 
   const item = await fetchReply(room);
 
-  if (!item) {
-    resultDiv.innerHTML = '<p style="color:#ccc;text-align:center;padding:10px;font-size:0.9rem;">还没有人回复哦~</p>';
+  if (!item || item === 'empty') {
+    const isApiError = window._lastApiError;
+    const hint = isApiError
+      ? 'API 连接失败：' + isApiError + '（B可能未完成发送）'
+      : '（请确认B已点"确认发送"）';
+    resultDiv.innerHTML = '<p style="color:#ccc;text-align:center;padding:10px;font-size:0.9rem;">还没有人回复哦~</p><p style="color:#ddd;text-align:center;font-size:0.75rem;">' + hint + '</p>';
+    window._lastApiError = null;
     return;
   }
 
@@ -500,17 +512,23 @@ async function saveToDatabase() {
 }
 
 async function fetchReply(room) {
-  // 先尝试 API（3秒超时）
+  // 先尝试 API（5秒超时）
   try {
     const controller = new AbortController();
-    const timer = setTimeout(function() { controller.abort(); }, 3000);
+    const timer = setTimeout(function() { controller.abort(); }, 5000);
     const res = await fetch(`${API_BASE}/list?room=${encodeURIComponent(room)}`, { signal: controller.signal });
     clearTimeout(timer);
-    const json = await res.json();
+    const text = await res.text();
+    console.log('API response:', res.status, text);
+    const json = JSON.parse(text);
     const data = json.data || [];
     if (data.length > 0) return data[0];
+    // API 返回空数据（数据库确实没有）
+    return 'empty';
   } catch (e) {
-    console.warn('API fetch failed, trying localStorage:', e.message);
+    console.warn('API fetch failed:', e.message);
+    // 存储错误信息供 submitReplyRoom 使用
+    window._lastApiError = e.message;
   }
   // API 失败或超时，读 localStorage 备份
   const local = localStorage.getItem('dating_room_' + room);
