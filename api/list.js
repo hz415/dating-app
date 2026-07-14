@@ -5,6 +5,11 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const { room } = req.query;
+  if (!room) {
+    return res.status(400).json({ error: 'Missing room parameter' });
+  }
+
   try {
     const conn = await mysql.createConnection({
       host: process.env.DB_HOST,
@@ -17,6 +22,7 @@ module.exports = async (req, res) => {
     await conn.execute(`
       CREATE TABLE IF NOT EXISTS dating_responses (
         id INT AUTO_INCREMENT PRIMARY KEY,
+        room VARCHAR(20),
         nickname VARCHAR(100),
         food VARCHAR(100),
         date VARCHAR(50),
@@ -26,7 +32,8 @@ module.exports = async (req, res) => {
     `);
 
     const [rows] = await conn.execute(
-      'SELECT nickname, food, date, time, created_at FROM dating_responses ORDER BY created_at DESC LIMIT 100'
+      'SELECT nickname, food, date, time, created_at FROM dating_responses WHERE room = ? ORDER BY created_at DESC LIMIT 100',
+      [room]
     );
 
     await conn.end();

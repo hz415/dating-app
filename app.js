@@ -7,6 +7,7 @@
 const AppState = {
   currentPage: 'welcome',
   nickname: '',
+  room: '',
   selectedFood: '',
   selectedDate: '',
   selectedTime: '',
@@ -362,6 +363,24 @@ function submitNickname() {
     return;
   }
   AppState.nickname = input.value.trim();
+
+  // 处理房间号
+  const roomInput = document.getElementById('room-input');
+  let room = roomInput ? roomInput.value.trim() : '';
+  if (!room) {
+    // 自动生成4位房间号
+    room = Math.random().toString(36).substring(2, 6);
+    const hint = document.getElementById('room-hint');
+    if (hint) hint.textContent = '你的房间号是：' + room + '（已自动创建，请发给对方）';
+    if (roomInput) roomInput.value = room;
+  }
+  AppState.room = room;
+
+  // 把房间号写入URL（方便分享）
+  const url = new URL(window.location);
+  url.searchParams.set('room', room);
+  window.history.replaceState({}, '', url);
+
   navigateTo('invite');
 }
 
@@ -375,6 +394,7 @@ async function saveToDatabase() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        room: AppState.room,
         nickname: AppState.nickname,
         food: AppState.selectedFood,
         date: AppState.selectedDate,
@@ -392,7 +412,7 @@ async function loadReplies() {
   list.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">加载中...</p>';
 
   try {
-    const res = await fetch(`${API_BASE}/list`);
+    const res = await fetch(`${API_BASE}/list?room=${encodeURIComponent(AppState.room || '')}`);
     const json = await res.json();
     const data = json.data || [];
 
@@ -463,6 +483,25 @@ function restartApp() {
 
 // ── 初始化 ──
 (function() {
+  // 从URL读取房间号
+  const params = new URLSearchParams(window.location.search);
+  const urlRoom = params.get('room');
+  if (urlRoom) {
+    AppState.room = urlRoom;
+    // 延迟填充到输入框（等DOM就绪）
+    const fillRoom = function() {
+      const roomInput = document.getElementById('room-input');
+      if (roomInput) roomInput.value = urlRoom;
+      const hint = document.getElementById('room-hint');
+      if (hint) hint.textContent = '已加入房间：' + urlRoom;
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fillRoom);
+    } else {
+      fillRoom();
+    }
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', renderCalendar);
   }

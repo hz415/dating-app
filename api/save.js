@@ -1,13 +1,12 @@
 const mysql = require('mysql2/promise');
 
 module.exports = async (req, res) => {
-  // 只允许 POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { nickname, food, date, time } = req.body;
-  if (!nickname || !food || !date || !time) {
+  const { room, nickname, food, date, time } = req.body;
+  if (!room || !nickname || !food || !date || !time) {
     return res.status(400).json({ error: 'Missing fields' });
   }
 
@@ -20,10 +19,10 @@ module.exports = async (req, res) => {
       database: process.env.DB_NAME,
     });
 
-    // 建表（如果不存在）
     await conn.execute(`
       CREATE TABLE IF NOT EXISTS dating_responses (
         id INT AUTO_INCREMENT PRIMARY KEY,
+        room VARCHAR(20),
         nickname VARCHAR(100),
         food VARCHAR(100),
         date VARCHAR(50),
@@ -33,8 +32,8 @@ module.exports = async (req, res) => {
     `);
 
     await conn.execute(
-      'INSERT INTO dating_responses (nickname, food, date, time) VALUES (?, ?, ?, ?)',
-      [nickname, food, date, time]
+      'INSERT INTO dating_responses (room, nickname, food, date, time) VALUES (?, ?, ?, ?, ?)',
+      [room, nickname, food, date, time]
     );
 
     await conn.end();
