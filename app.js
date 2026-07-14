@@ -502,7 +502,7 @@ function showToast(msg) {
   const savedHostRoom = localStorage.getItem('dating_hostRoom');
 
   if (urlRoom && localStorage.getItem('dating_guestSent') === 'true') {
-    // B 已经发送过，直接到已发送页
+    // B 本地有发送记录，直接到已发送页
     AppState.room = urlRoom;
     const goSent = function() {
       AppState.selectedFood = localStorage.getItem('dating_selectedFood') || '';
@@ -527,15 +527,44 @@ function showToast(msg) {
       setTimeout(goSent, 50);
     }
   } else if (urlRoom) {
-    // B 第一次打开，跳过欢迎页
+    // B 打开链接：先查数据库是否已有回复
     AppState.room = urlRoom;
-    const skipWelcome = function() {
-      navigateTo('invite');
+    const checkExisting = function() {
+      fetch(API_BASE + '/list?room=' + encodeURIComponent(urlRoom))
+        .then(function(r) { return r.json(); })
+        .then(function(json) {
+          var data = json.data || [];
+          if (data.length > 0) {
+            // 数据库已有回复，显示结果页
+            var item = data[0];
+            localStorage.setItem('dating_guestSent', 'true');
+            localStorage.setItem('dating_selectedFood', item.food || '');
+            localStorage.setItem('dating_selectedDate', item.date || '');
+            localStorage.setItem('dating_selectedTime', item.time || '');
+            var dateText = item.date ? formatDisplayDate(item.date) : '未选择';
+            var sentSummary = document.getElementById('sent-summary');
+            if (sentSummary) {
+              sentSummary.innerHTML = '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
+                + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + (item.food || '未选择') + '</span><br>'
+                + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateText + '</span><br>'
+                + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + (item.time || '未选择') + '</span>'
+                + '</div>';
+            }
+            navigateTo('sent');
+          } else {
+            // 没有回复，正常走流程
+            navigateTo('invite');
+          }
+        })
+        .catch(function() {
+          // 查询失败，正常走流程
+          navigateTo('invite');
+        });
     };
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', skipWelcome);
+      document.addEventListener('DOMContentLoaded', checkExisting);
     } else {
-      skipWelcome();
+      checkExisting();
     }
   } else if (savedHostRoom) {
     // A 之前创建过房间，恢复
