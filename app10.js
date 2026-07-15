@@ -517,8 +517,8 @@ async function saveToDatabase() {
   }
 }
 
-async function fetchReply(room) {
-  // 先尝试 API（15秒超时，中国访问美国服务器较慢）
+async function fetchReply(room, apiOnly) {
+  // 先尝试 API（15秒超时）
   try {
     const controller = new AbortController();
     const timer = setTimeout(function() { controller.abort(); }, 15000);
@@ -534,10 +534,12 @@ async function fetchReply(room) {
     console.warn('API fetch failed:', e.message);
     window._lastApiError = e.message;
   }
-  // API 失败或超时，读 localStorage 备份
-  const local = localStorage.getItem('dating_room_' + room);
-  if (local) {
-    try { return JSON.parse(local); } catch (e) {}
+  // 仅在非 apiOnly 模式下回退到 localStorage（给A查看回复用）
+  if (!apiOnly) {
+    const local = localStorage.getItem('dating_room_' + room);
+    if (local) {
+      try { return JSON.parse(local); } catch (e) {}
+    }
   }
   return null;
 }
@@ -560,7 +562,7 @@ function showToast(msg) {
     // B 打开带房间号的链接：先查数据库是否已有回复
     AppState.room = urlRoom;
     const checkExisting = async function() {
-      const item = await fetchReply(urlRoom);
+      const item = await fetchReply(urlRoom, true);
       if (item) {
         var dateText = item.date ? formatDisplayDate(item.date) : '未选择';
         var sentSummary = document.getElementById('sent-summary');
