@@ -290,10 +290,11 @@ function updateConfirmPage() {
 let noBtnStep = 0;
 const noBtnTexts = ['不要 🦶', '求求你了~', '点不到吧🤭', '再想想呗😔'];
 // All Y values are negative (upward only)
+// 路径：右上 → 左上 → 左下 → 回原点
 const noDodgeMoves = [
-  [80, -50],
+  [60, -40],
   [-60, -40],
-  [50, -30],
+  [-50, 35],
   [0, 0]
 ];
 
