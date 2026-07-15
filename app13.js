@@ -458,7 +458,7 @@ async function submitReplyRoom() {
 
   const resultDiv = document.getElementById('reply-modal-result');
   resultDiv.style.display = 'block';
-  resultDiv.innerHTML = '<p style="color:#999;text-align:center;padding:10px;">加载中...</p>';
+  resultDiv.innerHTML = '<p style="color:#999;text-align:center;padding:10px;animation:pulse 1s infinite;">加载中...</p><style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}</style>';
 
   const item = await fetchReply(room);
 
@@ -498,10 +498,10 @@ async function saveToDatabase() {
     time: AppState.selectedTime,
     created_at: new Date().toISOString()
   }));
-  // 尝试存到 API（15秒超时）
+  // 尝试存到 API
   try {
     const controller = new AbortController();
-    const timer = setTimeout(function() { controller.abort(); }, 15000);
+    const timer = setTimeout(function() { controller.abort(); }, 5000);
     const res = await fetch(`${API_BASE}/save`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -522,10 +522,9 @@ async function saveToDatabase() {
 }
 
 async function fetchReply(room, apiOnly) {
-  // 先尝试 API（15秒超时）
   try {
     const controller = new AbortController();
-    const timer = setTimeout(function() { controller.abort(); }, 15000);
+    const timer = setTimeout(function() { controller.abort(); }, 5000);
     const res = await fetch(`${API_BASE}/list?room=${encodeURIComponent(room)}`, { signal: controller.signal });
     clearTimeout(timer);
     const text = await res.text();
