@@ -483,7 +483,7 @@ async function submitReplyRoom() {
 }
 
 // ── 数据存储（API + localStorage 双保险）──
-const API_BASE = 'https://dating-52f0glmfp-hz5.vercel.app/api';
+const API_BASE = 'https://shrill-rice-67ee.2302942460.workers.dev/api';
 
 async function saveToDatabase() {
   if (!AppState.room) return;
