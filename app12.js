@@ -374,10 +374,7 @@ async function confirmSend() {
     btn.style.opacity = '0.6';
   }
 
-  // 存到数据库
-  await saveToDatabase();
-
-  // 显示发送成功页
+  // 先立即显示发送成功页，后台静默存数据
   const dateText = dateStr ? formatDisplayDate(dateStr) : '未选择';
   const sentSummary = document.getElementById('sent-summary');
   if (sentSummary) {
@@ -389,6 +386,13 @@ async function confirmSend() {
   }
 
   navigateTo('sent');
+
+  // 后台静默存到数据库
+  saveToDatabase().then(function() {
+    console.log('Reply saved to database');
+  }).catch(function(e) {
+    console.warn('Save failed:', e.message);
+  });
 }
 
 // ── 创建房间（弹窗方式）──
@@ -559,11 +563,15 @@ function showToast(msg) {
   const urlRoom = params.get('room');
 
   if (urlRoom) {
-    // B 打开带房间号的链接：先查API是否已有有效回复
+    // B 打开带房间号的链接：先显示邀请页，后台静默检查是否已回复
     AppState.room = urlRoom;
-    const checkExisting = async function() {
-      const item = await fetchReply(urlRoom, true);
-      // 只有数据完整才跳结果页，否则走正常流程
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { navigateTo('invite'); });
+    } else {
+      navigateTo('invite');
+    }
+    // 后台静默检查，如果已回复则跳转
+    fetchReply(urlRoom, true).then(function(item) {
       if (item && item !== 'empty' && item.food && item.date && item.time) {
         var dateText = item.date ? formatDisplayDate(item.date) : '未选择';
         var sentSummary = document.getElementById('sent-summary');
@@ -575,15 +583,8 @@ function showToast(msg) {
             + '</div>';
         }
         navigateTo('sent');
-      } else {
-        navigateTo('invite');
       }
-    };
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', checkExisting);
-    } else {
-      checkExisting();
-    }
+    });
   }
 
   if (document.readyState === 'loading') {
