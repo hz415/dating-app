@@ -559,18 +559,19 @@ function showToast(msg) {
   const urlRoom = params.get('room');
 
   if (urlRoom) {
-    // B 打开带房间号的链接：先查数据库是否已有回复
+    // B 打开带房间号的链接：先查API是否已有有效回复
     AppState.room = urlRoom;
     const checkExisting = async function() {
       const item = await fetchReply(urlRoom, true);
-      if (item) {
+      // 只有数据完整才跳结果页，否则走正常流程
+      if (item && item !== 'empty' && item.food && item.date && item.time) {
         var dateText = item.date ? formatDisplayDate(item.date) : '未选择';
         var sentSummary = document.getElementById('sent-summary');
         if (sentSummary) {
           sentSummary.innerHTML = '<div style="font-size: 0.85rem; color: #666; line-height: 2;">'
-            + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + (item.food || '未选择') + '</span><br>'
+            + '🍽 想吃：<span style="font-weight: bold; color: #FF6B8A;">' + item.food + '</span><br>'
             + '📅 日期：<span style="font-weight: bold; color: #FF6B8A;">' + dateText + '</span><br>'
-            + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + (item.time || '未选择') + '</span>'
+            + '⏰ 时间：<span style="font-weight: bold; color: #FF6B8A;">' + item.time + '</span>'
             + '</div>';
         }
         navigateTo('sent');
